@@ -75,8 +75,11 @@ simul_AS7343 <- function(source.spct,
                                               default = "energy"),
                          time.unit = NULL,
                          scale.factor = 1) {
+  ams_AS7343.mspct <-
+    photobiology::normalise(photobiologySensors::sensors.mspct[["ams_AS7343"]],
+                            norm = "undo")
   simul_response(source.spct = source.spct,
-                 sensor.mspct = photobiologySensors::ams_AS7343.spct,
+                 sensor.mspct = ams_AS7343.mspct,
                  range = range(source.spct),
                  unit.out = unit.out,
                  time.unit = time.unit,

@@ -36,6 +36,7 @@ photon_as_default()
 The AS7343 sensor has 13 channels covering wavelengths in the range 370-900 nm. 
 
 ```{r}
+ams_AS7343.spct <- sensors.mspct[["ams_AS7343"]]
 ams_AS7343.mspct <- subset2mspct(ams_AS7343.spct)
 autoplot(ams_AS7343.mspct)
 ```
@@ -176,7 +177,7 @@ channels.ls <-list()
 spct.names <- names(test.mspct)
 for (name in spct.names) {
 #  print(name)
-  temp.tb <-simul_AS7343(test.mspct[[name]][ , 1:2])
+  temp.tb <- simul_AS7343(test.mspct[[name]][ , 1:2])
   channels.ls[[name]] <- temp.tb[[2]]
 }
 channels.tb <- as.data.frame(t(as.data.frame(channels.ls)))
@@ -304,9 +305,9 @@ ggplot(all_data.tb, aes(Q_Red.Smith20 * 1e6, F6)) +
 ```{r}
 ggplot(all_data.tb, aes(Q_FarRed.Sellaro * 1e6, F8)) +
   geom_point() +
-  stat_poly_line(formula = y ~ x + 0, method = "sma") +
+  stat_poly_line(formula = y ~ x - 1, method = "sma") +
   stat_poly_eq(use_label("eq", "R2", "n", "AIC"),
-               formula = y ~ x + 0, method = "sma")
+               formula = y ~ x - 1, method = "sma")
 ```
 
 ```{r}
