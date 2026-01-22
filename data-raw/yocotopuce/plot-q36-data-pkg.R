@@ -1,6 +1,6 @@
 library(photobiology)
 library(photobiologyInOut)
-library(ggpp)
+library(ggspectra)
 library(dplyr)
 library(lubridate)
 library(AS7343)
@@ -43,4 +43,19 @@ ggplot(Q36_02.tb, aes(time)) +
 
 Q36.mspct <- yocto_spectral2mspct(Q36_01.tb, "narrow")
 
-autoplot(Q36.mspct)
+autoplot(Q36.mspct[[30]], geom = "col", range = c(350, 900))
+autoplot(Q36.mspct[[30]], geom = c("point", "line"), range = c(350, 900))
+
+Q36.mspct <- yocto_spectral2mspct(Q36_01.tb, "wide")
+
+autoplot(Q36.mspct[[30]], geom = "col", range = c(250, 1000))
+
+Q36.mspct <- yocto_spectral2mspct(Q36_01.tb, "xyz")
+
+autoplot(Q36.mspct[[30]], geom = "col", range = c(250, 1000))
+
+Q36.mspct <- yocto_spectral2mspct(Q36_01.tb, "all")
+
+autoplot(Q36.mspct[[30]], geom = "col")
+autoplot(Q36.mspct[[30]], geom = c("point", "line"), range = c(350, 900))
+
