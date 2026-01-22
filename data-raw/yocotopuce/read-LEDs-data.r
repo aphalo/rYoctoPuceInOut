@@ -27,79 +27,119 @@ ggplot(subset(spectrl_s01_s02.tb, spectralChannel13.avg.x < 500),
         aes(spectralChannel13.avg.x, spectralChannel13.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
+
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel12.avg.x < 500),
        aes(spectralChannel12.avg.x, spectralChannel12.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel11.avg.x < 500),
        aes(spectralChannel11.avg.x, spectralChannel11.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel10.avg.x < 500),
        aes(spectralChannel10.avg.x, spectralChannel10.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel9.avg.x < 500),
        aes(spectralChannel9.avg.x, spectralChannel9.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel8.avg.x < 500),
        aes(spectralChannel8.avg.x, spectralChannel8.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel7.avg.x < 500),
        aes(spectralChannel7.avg.x, spectralChannel7.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel6.avg.x < 500),
        aes(spectralChannel6.avg.x, spectralChannel6.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel5.avg.x < 500),
        aes(spectralChannel5.avg.x, spectralChannel5.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel4.avg.x < 500),
        aes(spectralChannel4.avg.x, spectralChannel4.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel3.avg.x < 500),
        aes(spectralChannel3.avg.x, spectralChannel3.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel2.avg.x < 500),
        aes(spectralChannel2.avg.x, spectralChannel2.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel1.avg.x < 500),
        aes(spectralChannel1.avg.x, spectralChannel1.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ## time series
 

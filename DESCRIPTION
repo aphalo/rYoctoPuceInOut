@@ -15,12 +15,16 @@ Description: Simulate the response of the AS7343 spectral sensor from asm OSRAM.
     response of each of the 13 channels of the AS7343 digital spectral sensor.
 License: GPL (>= 2)
 Depends: 
-    R (>= 4.0.0),
+    R (>= 4.1.0),
     photobiology (>= 0.13.2)
 Encoding: UTF-8
 LazyLoad: true
 Imports:
-    photobiologySensors (> 0.5.1)
+    utils,
+    photobiologySensors (> 0.5.1),
+    tidyr,
+    dplyr,
+    lubridate
 Suggests:
     photobiologySun,
     photobiologyLamps,
@@ -30,5 +34,5 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/Needs/website: rmarkdown

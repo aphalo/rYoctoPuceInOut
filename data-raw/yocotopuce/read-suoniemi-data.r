@@ -23,17 +23,36 @@ head(spectrl_02.tb$time, 30)
 spectrl_s01_s02.tb <-
   full_join(spectrl_01.tb, spectrl_02.tb, by = "Local.time")
 
-ggplot(subset(spectrl_s01_s02.tb, spectralChannel13.avg.x < 500),
+# the values near zero disturb quantile fit computations!
+nrow(spectrl_s01_s02.tb)
+spectrl_s01_s02.tb <- subset(spectrl_s01_s02.tb,
+                             spectralChannel13.avg.x < 500 & spectralChannel13.avg.y < 500 &
+                               spectralChannel13.avg.x > 5 & spectralChannel13.avg.y > 5)
+nrow(spectrl_s01_s02.tb)
+
+ggplot(spectrl_s01_s02.tb,
+       aes(spectralChannel13.avg.x, spectralChannel13.avg.y)) +
+  geom_point() +
+  stat_quant_line(geom = "debug_group", se = FALSE)
+
+
+ggplot(spectrl_s01_s02.tb,
         aes(spectralChannel13.avg.x, spectralChannel13.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"), label.y = 0.87,
+                quantiles = 0.5, colour = "red")
 
-ggplot(subset(spectrl_s01_s02.tb, spectralChannel12.avg.x < 500),
+ggplot(spectrl_s01_s02.tb,
        aes(spectralChannel12.avg.x, spectralChannel12.avg.y)) +
   geom_point() +
   stat_poly_line(method = "sma", se = FALSE) +
-  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma")
+  stat_poly_eq(mapping = use_label("eq", "R2", "n", "AIC"), method = "sma") +
+  stat_quant_line(se = FALSE, colour = "red", quantiles = 0.5) +
+  stat_quant_eq(mapping = use_label("eq", "n", "AIC"),
+                quantiles = 0.5, colour = "red", label.y = 0.85)
 
 ggplot(subset(spectrl_s01_s02.tb, spectralChannel11.avg.x < 500),
        aes(spectralChannel11.avg.x, spectralChannel11.avg.y)) +
