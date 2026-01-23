@@ -23,7 +23,6 @@ yocto_spectral2mspct <- function(x, channels = "all") {
                       cols = !contains("time"),
                       names_to = "channel",
                       values_to = "counts") |>
-    dplyr::select(-UNIX.time, -Local.time) |>
     dplyr::mutate(
       channel = gsub("\\.avg$", "", channel),
       w.length = AS7343_metadata()[channel]

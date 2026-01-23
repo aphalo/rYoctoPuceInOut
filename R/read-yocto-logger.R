@@ -3,6 +3,9 @@
 #' Functions able to directly read and validate data from .CSV files from
 #' the dataloggers biult into YoctoPuce USB modules.
 #'
+#' @param cols.pattern character A string suitable as argument for
+#'   \code{pattern} in a call to \code{grep()}. \code{NULL} or
+#'   \code{characte(0)} retain all columns.
 #' @inheritParams utils::read.table
 #' @inheritParams lubridate::ymd_hms
 #' @inheritDotParams utils::read.table colClasses nrows skip check.names comment.char
@@ -25,13 +28,36 @@
 #'
 #' @export
 #'
+#' @examples
+#' yocto_meteo.file <-
+#'   system.file("extdata", "yocto-meteo-snm.csv",
+#'             package = "AS7343", mustWork = TRUE)
+#'
+#' read_yocto_logger_csv(yocto_meteo.file)
+#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg")
+#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max")
+#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature")
+#'
+#' yocto_spectral.file <-
+#'   system.file("extdata", "yocto-spectral-LED.csv",
+#'             package = "AS7343", mustWork = TRUE)
+#'
+#' read_yocto_spectral_csv(yocto_spectral.file)
+#' read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE)
+#' read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\.")
+#'
+#' AS7343_metadata()
+#'
 read_yocto_logger_csv <- function(file,
+                                  cols.pattern = NULL,
                                   dec = ".", sep = ";", tz = "UTC", ...) {
+
   data.df <- utils::read.csv(file,
                              quote = "", na.strings = "", strip.white = FALSE,
                              blank.lines.skip = TRUE,
                              dec = dec, sep = sep,
                              ...)
+
   # add column with POSIXct
   data.df[["time"]] <- lubridate::ymd_hms(data.df[["Local.time"]], tz = tz)
 
@@ -41,8 +67,9 @@ read_yocto_logger_csv <- function(file,
                 collapse = " to ", sep = ""))
   if (length(unique(diff(data.df[["UNIX.time"]]))) > 1L) {
     message("Found gaps, time steps range from ",
-            paste(range(unique(diff(data.df[["UNIX.time"]]))), collapse = " to "),
-            " s")
+            paste(lubridate::as.duration(
+              range(unique(diff(data.df[["UNIX.time"]])))),
+                  collapse = " to "))
   }
   if (anyNA(data.df[["UNIX.time"]])) {
     warning("Found missing time stamps! Deleting ", sum(is.na(data.df[["UNIX.time"]])))
@@ -53,6 +80,12 @@ read_yocto_logger_csv <- function(file,
   }
   if (length(unique(data.df[["UNIX.time"]])) < nrow(data.df)) {
     warning("Found duplicated time stamps! Likely clock was reset midway.")
+  }
+
+  # select columns
+  if (length(cols.pattern)) {
+    data.cols <- grep(cols.pattern, x = colnames(data.df), value = TRUE)
+    data.df <- data.df[ , c("time", data.cols)]
   }
 
   # add comment with file and import data
@@ -75,10 +108,14 @@ read_yocto_logger_csv <- function(file,
 #'
 #' @export
 #'
-read_yocto_spectral_csv <- function(file, dec = ".", sep = ";", tz = "UTC",
-                                    cols.rename = TRUE, ...) {
+read_yocto_spectral_csv <- function(file,
+                                    cols.pattern = "avg",
+                                    cols.rename = TRUE,
+                                    dec = ".", sep = ";", tz = "UTC", ...) {
 
-  data.df <- read_yocto_logger_csv(file, dec = dec, sep = sep, tz = tz, ...)
+  data.df <- read_yocto_logger_csv(file,
+                                   cols.pattern = cols.pattern,
+                                   dec = dec, sep = sep, tz = tz, ...)
 
   # get sensor metadata
   metadata <- AS7343_metadata()
@@ -121,5 +158,3 @@ AS7343_metadata <- function() {
   names(chn.wls.AS7343) <- chn.names.AS7343
   chn.wls.AS7343
 }
-
-
