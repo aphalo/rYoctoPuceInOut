@@ -4,11 +4,11 @@ Title: Logged Data File Import for YoctoPuce USB Modules
 Version: 0.0.1
 Date: 2026-01-24
 Authors@R: c(
-    person(
-      "Pedro", "Aphalo",
-      email = "pedro.aphalo@helsinki.fi",
-      role = c("aut", "cre")
-    )
+    person("Pedro J.", "Aphalo", 
+      email = "pedro.aphalo@helsinki.fi", 
+      role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0003-3385-972X")
+      )
   )
 Description: Read CSV files from the data loggers built into YoctoPuce USB
     sensor modules and JSON files with module settings and other metadata.
@@ -32,6 +32,9 @@ Suggests:
     ggplot2,
     knitr,
     rmarkdown
+URL: https://docs.r4photobiology.info/rYoctoPuceInOut/,
+    https://github.com/aphalo/rYoctoPuceInOut
+BugReports: https://github.com/aphalo/rYoctoPuceInOut/issues
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

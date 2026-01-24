@@ -6,9 +6,9 @@
 #' @param settings.file character Path to a JSON file containing the module
 #'   settings used to acquire the data.
 #' @param cols.pattern character A string suitable as argument for
-#'   \code{pattern} in a call to \code{grep()}. \code{NULL} or
-#'   \code{characte(0)} retain all data columns, while \code{NA} returns
-#'   all data and time columns.
+#'   \code{pattern} in a call to \code{grep()} on column headings in the
+#'   imported CSV file. \code{NULL} or \code{characte(0)} retain all data
+#'   columns, while \code{NA} returns all data and time columns.
 #' @param cols.logical.names logical Use logical names from module
 #'   metadata instead of column heading in CSV file. Require readable
 #'   \code{settings.file}.
@@ -75,30 +75,48 @@
 #' @export
 #'
 #' @examples
+#' # Yocto-Meteo module
+#'
 #' yocto_meteo.file <-
 #'   system.file("extdata", "yocto-meteo-snm.csv",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#' yocto_meteo_json.file <-
+#'   system.file("extdata", "METEOMK2-19A230.json",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_meteo.file)
-#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg")
-#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max")
-#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature")
-#' read_yocto_logger_csv(yocto_meteo.file, nrows = 5L)
+#' read_yocto_logger_csv(yocto_meteo.file) |> head(n = 5)
+#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_meteo.file, nrows = 4L)
+#'
+#' # metadata from JSON file
+#' data.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file)
+#' how_measured(data.df)
+#'
+#' # Yocto-Millivolt-Rx module
 #'
 #' yocto_mv.file <-
 #'   system.file("extdata", "yocto-millivolt-Rx.csv",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_mv.file)
+#' read_yocto_logger_csv(yocto_mv.file) |> head(n = 5)
+#'
+#' # Yocto-0-10V-Rx module
 #'
 #' yocto_v.file <-
 #'   system.file("extdata", "yocto-0-10V-Rx.csv",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_v.file)
-#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg")
-#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "min|max")
-#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "Sensor2")
+#' read_yocto_logger_csv(yocto_v.file) |> head(n = 5)
+#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg") |> head(n = 5)
+#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "min|max") |> head(n = 5)
+#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "Sensor2") |> head(n = 5)
+#'
+#' # Yocto-Serial module
 #'
 #' yocto_serial.file <-
 #'   system.file("extdata", "yocto-serial.csv",
@@ -107,53 +125,79 @@
 #'   system.file("extdata", "YSERIAL1-EAD24.json",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_serial.file)
-#' read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE)
-#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "avg")
-#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "min|max")
-#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$")
+#' read_yocto_logger_csv(yocto_serial.file) |> head(n = 5)
+#' read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE) |> head(n = 2)
+#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "avg") |> head(n = 5)
+#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$") |>
+#'   head(n = 5)
+#'
+#' # metadata from JSON file
 #' data.tb <-
-#'   read_yocto_logger_csv(yocto_serial.file, yocto_serial_settings.file)
+#'   read_yocto_logger_csv(yocto_serial.file,
+#'                         yocto_serial_settings.file,
+#'                         cols.logical.names = TRUE)
 #' how_measured(data.tb)
 #' colnames(data.tb)
+#'
+#' # Yocto-I2C module
 #'
 #' yocto_i2c.file <-
 #'   system.file("extdata", "yocto-i2c-tsl2591.csv",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_i2c.file)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg")
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "min|max")
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor1[.]")
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]")
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg", nacols.rm = TRUE)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]avg")
+#' read_yocto_logger_csv(yocto_i2c.file) |> head(n = 5)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "min|max") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor1[.]") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]") |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg", nacols.rm = TRUE) |>
+#'   head(n = 5)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]avg") |>
+#'   head(n = 5)
+#'
+#' # Yocto-CO2 module
 #'
 #' yocto_CO2.file <-
 #'   system.file("extdata", "yocto-CO2-V1.csv",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_CO2.file)
-#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg")
-#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "min|max")
+#' read_yocto_logger_csv(yocto_CO2.file) |> head(n = 5)
+#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg") |> head(n = 5)
+#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "min|max") |> head(n = 5)
+#'
+#' # Yocto-Spectral module
 #'
 #' yocto_spectral.file <-
 #'   system.file("extdata", "yocto-spectral-LED.csv",
 #'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#' yocto_spectral_json.file <-
+#'   system.file("extdata", "SPECTRL1-2CF3B6.json",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_spectral_csv(yocto_spectral.file)
-#' read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE)
-#' read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\.")
+#' read_yocto_spectral_csv(yocto_spectral.file) |> head(n = 5)
+#' read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\.") |>
+#'   head(n = 5)
+#' read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE) |>
+#'   head(n = 5)
+#'
+#' # metadata from JSON file
+#' spct.df <- read_yocto_spectral_csv(yocto_spectral.file,
+#'                                    yocto_spectral_json.file) |> head(n = 5)
+#' how_measured(spct.df)
 #'
 #' AS7343_metadata()
 #'
 read_yocto_logger_csv <- function(file,
+                                  settings.file = NULL,
                                   geocode = NULL,
                                   label = NULL,
-                                  settings.file = NULL,
                                   cols.pattern = NULL,
                                   cols.logical.names = FALSE,
-                                  nacols.rm = is.null(cols.pattern),
+                                  nacols.rm = TRUE,
                                   dec = ".", sep = ";", tz = "UTC",
                                   ...) {
 

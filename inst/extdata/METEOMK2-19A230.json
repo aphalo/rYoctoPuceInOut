@@ -1,0 +1,7 @@
+{ "api":{
+"module":{"productName":"Yocto-Meteo-V2","serialNumber":"METEOMK2-19A230","logicalName":"C2-Meteo","productId":132,"productRelease":1,"firmwareRelease":"69970","persistentSettings":1,"luminosity":50,"beacon":0,"upTime":32506,"usbCurrent":24,"rebootCountdown":0,"userVar":0},
+"humidity":{"logicalName":"C2_humidity","advertisedValue":"31.6","unit":"% RH","currentValue":2068316,"lowestValue":2068316,"highestValue":2162688,"currentRawValue":2068316,"logFrequency":"1/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":6553,"sensorState":0,"relHum":2068316,"absHum":413597},
+"pressure":{"logicalName":"C2_pressure","advertisedValue":"1023","unit":"mbar","currentValue":67040313,"lowestValue":67040247,"highestValue":67044245,"currentRawValue":67040313,"logFrequency":"1/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":655,"sensorState":0},
+"temperature":{"logicalName":"C2_temperature","advertisedValue":"22.52","unit":"°C","currentValue":1476067,"lowestValue":1471741,"highestValue":1476067,"currentRawValue":1476067,"logFrequency":"1/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":655,"sensorState":0,"sensorType":0,"signalValue":0,"signalUnit":"","command":""},
+"dataLogger":{"logicalName":"C2_Meteo_logger","advertisedValue":"ON","currentRunIndex":6,"timeUTC":1769286179,"recording":1,"autoStart":1,"beaconDriven":0,"usage":1,"clearHistory":0}}, "extras":[],
+"files":[]}

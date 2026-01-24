@@ -1,5 +1,53 @@
-url: ~
+destination: ../docs/rYoctoPuceInOut
+url: https://docs.r4photobiology.info/rYoctoPuceInOut
+
 template:
   bootstrap: 5
-destination: ../docs/AS7343
+  math-rendering: katex
 
+reference:
+  - title: Data import
+    desc: Functions that read CSV files from data loggers in YoctoPuce USB modules and return data frames.
+    contents:
+    - read_yocto_logger_csv
+  - title: Data conversion
+    desc: Functions that convert the imported data frames into objects of classes from package 'photobiology'.
+    contents:
+    - yocto_spectral2mspct
+  - title: Data simulation
+    desc: Functions that simulate sensor response from sensor specifications and spectral irradiance.
+    contents:
+    - simul_response
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, tutorials, news]
+    right: [search, github]
+  components:
+    intro:
+      icon: fas fa-home fa-lg
+      href: index.html
+      aria-label: Home
+    reference:
+      text: Reference
+      href: reference/index.html
+    news:
+      text: Changelog
+      href: news/index.html
+    articles:
+      text: User Guide
+      menu:
+      - text: 'User Guide'
+        href: articles/user-guide.html
+      - text: 'AS7343 Simulations'
+        href: articles/plant-qts.html
+    tutorials:
+      text: Resources
+      menu:
+      - text: YoctoPuce web site
+        href: https://www.yoctopuce.com
+      - text: ------
+      - text: Book 'Learn R - As a Language'
+        href: https://www.learnr-book.info/
+      - text: R for Photobiology web site
+        href: https://www.r4photobiology.info/

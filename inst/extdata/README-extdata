@@ -1,0 +1,6 @@
+README:
+
+CSV files are from the data logger of different YoctoPuce USB modules, trimmed
+to no more than 200 rows.
+
+JSON files are exported settings from  different YoctoPuce USB modules.

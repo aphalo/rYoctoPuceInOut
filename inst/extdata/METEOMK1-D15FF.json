@@ -1,0 +1,7 @@
+{ "api":{
+"module":{"productName":"Yocto-Meteo","serialNumber":"METEOMK1-D15FF","logicalName":"Meteo-02","productId":24,"productRelease":1,"firmwareRelease":"51180","persistentSettings":0,"luminosity":0,"beacon":0,"upTime":10438,"usbCurrent":22,"rebootCountdown":0,"userVar":0},
+"humidity":{"logicalName":"","advertisedValue":"33.9","unit":"% RH","currentValue":2221735,"lowestValue":2221735,"highestValue":2502754,"currentRawValue":2221735,"logFrequency":"1/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":6553,"sensorState":0,"relHum":2221735,"absHum":461111},
+"pressure":{"logicalName":"","advertisedValue":"1039.3","unit":"mbar","currentValue":68112875,"lowestValue":68112220,"highestValue":68114513,"currentRawValue":67195371,"logFrequency":"1/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"30 0:0 1000:1014,","resolution":655,"sensorState":0},
+"temperature":{"logicalName":"","advertisedValue":"23.17","unit":"'C","currentValue":1518731,"lowestValue":1508179,"highestValue":1518731,"currentRawValue":1518731,"logFrequency":"1/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":655,"sensorState":0,"sensorType":0,"signalValue":0,"signalUnit":"","command":""},
+"dataLogger":{"logicalName":"","advertisedValue":"ON","currentRunIndex":0,"timeUTC":1769286269,"recording":1,"autoStart":1,"beaconDriven":0,"usage":1,"clearHistory":0}}, "extras":[],
+"files":[]}

@@ -1,0 +1,5 @@
+{ "api":{
+"module":{"productName":"Yocto-Relay","serialNumber":"RELAYLO1-B263A","logicalName":"RELAY","productId":12,"productRelease":1,"firmwareRelease":"69970","persistentSettings":1,"luminosity":24,"beacon":0,"upTime":8993,"usbCurrent":24,"rebootCountdown":0,"userVar":0},
+"relay1":{"logicalName":"RELAY1","advertisedValue":"A","state":0,"stateAtPowerOn":1,"maxTimeOnStateA":0,"maxTimeOnStateB":0,"output":0,"pulseTimer":0,"delayedPulseTimer":{"moving":0,"target":0,"ms":0},"countdown":0},
+"relay2":{"logicalName":"RELAY2","advertisedValue":"A","state":0,"stateAtPowerOn":1,"maxTimeOnStateA":0,"maxTimeOnStateB":0,"output":0,"pulseTimer":0,"delayedPulseTimer":{"moving":0,"target":0,"ms":0},"countdown":0}}, "extras":[],
+"files":[]}

@@ -12,5 +12,5 @@ module.
 frame returned by `read_yocto_spectral_csv()` into a `source_mspct` collection
 of `source_spct` objects. 
 - Implement function `simul_AS7343()` for simulating the response of each
-channel of the *AS7343* sensor integrated circuit based on illumination
+channel of the *AS7343* sensor integrated circuit based on irradiance
 spectra.
