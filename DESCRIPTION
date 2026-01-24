@@ -1,8 +1,8 @@
-Package: AS7343
+Package: rYoctoPuceInOut
 Type: Package
-Title: Simulate AS7343 Response
-Version: 0.1.0
-Date: 2025-07-31
+Title: Logged Data File Import for YoctoPuce USB Modules 
+Version: 0.0.1
+Date: 2026-01-24
 Authors@R: c(
     person(
       "Pedro", "Aphalo",
@@ -10,9 +10,8 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: Simulate the response of the AS7343 spectral sensor from asm OSRAM.
-    Based on a light spectrum with high wavelength resolution simulate the
-    response of each of the 13 channels of the AS7343 digital spectral sensor.
+Description: Read CSV files from the data loggers built into YoctoPuce USB
+    sensor modules and JSON files with module settings and other metadata.
 License: GPL (>= 2)
 Depends: 
     R (>= 4.1.0),
@@ -21,9 +20,10 @@ Encoding: UTF-8
 LazyLoad: true
 Imports:
     utils,
+    jsonlite,
+    SunCalcMeeus,
     photobiologySensors (> 0.5.1),
     tidyr,
-    dplyr,
     lubridate
 Suggests:
     photobiologySun,

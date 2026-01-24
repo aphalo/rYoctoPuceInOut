@@ -4,7 +4,7 @@
 \alias{yocto_spectral2mspct}
 \title{Yocto-Spectral to spectra}
 \usage{
-yocto_spectral2mspct(x, channels = "all")
+yocto_spectral2mspct(x)
 }
 \arguments{
 \item{x}{data.frame With only one of average, minimum or maximum sensor

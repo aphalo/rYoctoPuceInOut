@@ -22,7 +22,7 @@ library(photobiologyLamps)
 library(ggspectra)
 library(ggpmisc)
 library(smatr)
-library(AS7343)
+library(rYoctoPuceInOut)
 ```
 
 
@@ -36,8 +36,12 @@ photon_as_default()
 The AS7343 sensor has 13 channels covering wavelengths in the range 370-900 nm. 
 
 ```{r}
-ams_AS7343.mspct <- subset2mspct(ams_AS7343.spct)
+ams_AS7343.mspct <- subset2mspct(sensors.mspct$ams_AS7343)
 autoplot(ams_AS7343.mspct)
+```
+
+```{r}
+autoplot(ams_AS7343.mspct, norm = "undo")
 ```
 
 ## Hourly sunlight spectra

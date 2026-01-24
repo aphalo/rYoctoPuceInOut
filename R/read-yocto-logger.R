@@ -1,11 +1,23 @@
 #' Read data from YoctoPuce CSV files
 #'
-#' Functions able to directly read and validate data from .CSV files from
-#' the dataloggers biult into YoctoPuce USB modules.
+#' Functions able to directly read and validate data from .CSV files created by
+#' the data loggers built into YoctoPuce USB modules.
 #'
+#' @param settings.file character Path to a JSON file containing the module
+#'   settings used to acquire the data.
 #' @param cols.pattern character A string suitable as argument for
 #'   \code{pattern} in a call to \code{grep()}. \code{NULL} or
-#'   \code{characte(0)} retain all columns.
+#'   \code{characte(0)} retain all data columns, while \code{NA} returns
+#'   all data and time columns.
+#' @param cols.logical.names logical Use logical names from module
+#'   metadata instead of column heading in CSV file. Require readable
+#'   \code{settings.file}.
+#' @param nacols.rm logical If \code{TRUE} delete columns that contain only
+#'   \code{NA} values.
+#' @param geocode	data.frame Containing columns \code{lon} and \code{lat} used
+#'   to set attribute \code{"where.measured"}.
+#' @param label	character Additional text to be appended to the default
+#'   value used to set attribute \code{"comment"}.
 #' @inheritParams utils::read.table
 #' @inheritParams lubridate::ymd_hms
 #' @inheritDotParams utils::read.table colClasses nrows skip check.names comment.char
@@ -15,32 +27,119 @@
 #' in the number of data columns and their names. Function
 #' \code{read_yocto_logger()} reads any of these files preserving column
 #' names. The UTC times are converted into \code{POSIXct} values and added
-#' under column \code{time}.
+#' under column \code{time}. A subset of columns can be requested by
+#' passing a regular expression to be used in a call to \code{grep()} on the
+#' column names. If \code{nacols.rm = TRUE} is passed, columns containing only
+#' \code{NA} values are deleted, as these columns in most cases correspond
+#' to logger channels that are not in use.
 #'
-#' Warnings are issued if something unexpected is encountered in the sequence
-#' of UNIX time stamps in the file.
+#' Warnings are issued if something unexpected, such as dates several years
+#' into the past, unsorted or repeated time stamps
+#' are encountered in the sequence of UNIX time stamps in the file. These
+#' discrepancies can occur when the modules' or the YoctoHub clocks do not
+#' acquire a valid time at start-up. Inconsistent time steps are reported
+#' through a message, as these are the result of a stop followed by restart
+#' of logging. During such a pause it is possible that module settings could
+#' have been changed.
+#'
+#' If the name of a JSON file as saved from the YoctoPuce module is passed as
+#' an argument to parameter \code{settings.file} its contents parse into an
+#' R list will be saved to attribute \code{yoctopuce.settings} in the returned
+#' data frame.
+#'
+#' Function \code{read_yocto_spectral_csv()} is a wrapper on
+#' \code{read_yocto_logger()} that renames columns using the names used in
+#' the data sheet for the AS7343 sensor.
 #'
 #' In modules with multiple channels, the user can enable and disable logging
 #' on a channel by channel basis. Thus, the number of data columns can vary,
 #' making it necessary to match columns by name when replacing some of the
-#' default names by shorter or more informative ones. Currently, the
-#' replacement names are hard coded.
+#' default names by shorter or more informative ones.
+#'
+#' @section Warning!: The units and basis of expression, and in several cases
+#' even the physical quantity measured cannot be decoded from the CSV files.
+#' The values in the returned data frame are those read from the file, and
+#' the read values have to be interpreted based on the settings and, possibly,
+#' scripts used during data acquisition by the USB module. These settings
+#' if available in a JSON file downloaded from the module can be stored in
+#' attribute \code{yoctopuce.settings} of the data frame returned.
+#'
+#' @return A data frame with \code{POSIXct} time stamps in column \code{time}
+#'   and data in a variable number of columns containing values converted by
+#'   \code{\link[utils:read.table]{read.csv}()}.
+#'
+#' @references
+#' Documentation for each YocotoPuce USB module is available at
+#' \url{https://www.yoctopuce.com/}.
 #'
 #' @export
 #'
 #' @examples
 #' yocto_meteo.file <-
 #'   system.file("extdata", "yocto-meteo-snm.csv",
-#'             package = "AS7343", mustWork = TRUE)
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_logger_csv(yocto_meteo.file)
 #' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg")
 #' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max")
 #' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature")
+#' read_yocto_logger_csv(yocto_meteo.file, nrows = 5L)
+#'
+#' yocto_mv.file <-
+#'   system.file("extdata", "yocto-millivolt-Rx.csv",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'
+#' read_yocto_logger_csv(yocto_mv.file)
+#'
+#' yocto_v.file <-
+#'   system.file("extdata", "yocto-0-10V-Rx.csv",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'
+#' read_yocto_logger_csv(yocto_v.file)
+#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg")
+#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "min|max")
+#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "Sensor2")
+#'
+#' yocto_serial.file <-
+#'   system.file("extdata", "yocto-serial.csv",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#' yocto_serial_settings.file <-
+#'   system.file("extdata", "YSERIAL1-EAD24.json",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'
+#' read_yocto_logger_csv(yocto_serial.file)
+#' read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE)
+#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "avg")
+#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "min|max")
+#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$")
+#' data.tb <-
+#'   read_yocto_logger_csv(yocto_serial.file, yocto_serial_settings.file)
+#' how_measured(data.tb)
+#' colnames(data.tb)
+#'
+#' yocto_i2c.file <-
+#'   system.file("extdata", "yocto-i2c-tsl2591.csv",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'
+#' read_yocto_logger_csv(yocto_i2c.file)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg")
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "min|max")
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor1[.]")
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]")
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg", nacols.rm = TRUE)
+#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]avg")
+#'
+#' yocto_CO2.file <-
+#'   system.file("extdata", "yocto-CO2-V1.csv",
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'
+#' read_yocto_logger_csv(yocto_CO2.file)
+#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg")
+#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "min|max")
 #'
 #' yocto_spectral.file <-
 #'   system.file("extdata", "yocto-spectral-LED.csv",
-#'             package = "AS7343", mustWork = TRUE)
+#'             package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_spectral_csv(yocto_spectral.file)
 #' read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE)
@@ -49,8 +148,14 @@
 #' AS7343_metadata()
 #'
 read_yocto_logger_csv <- function(file,
+                                  geocode = NULL,
+                                  label = NULL,
+                                  settings.file = NULL,
                                   cols.pattern = NULL,
-                                  dec = ".", sep = ";", tz = "UTC", ...) {
+                                  cols.logical.names = FALSE,
+                                  nacols.rm = is.null(cols.pattern),
+                                  dec = ".", sep = ";", tz = "UTC",
+                                  ...) {
 
   data.df <- utils::read.csv(file,
                              quote = "", na.strings = "", strip.white = FALSE,
@@ -82,22 +187,95 @@ read_yocto_logger_csv <- function(file,
     warning("Found duplicated time stamps! Likely clock was reset midway.")
   }
 
-  # select columns
-  if (length(cols.pattern)) {
-    data.cols <- grep(cols.pattern, x = colnames(data.df), value = TRUE)
-    data.df <- data.df[ , c("time", data.cols)]
+  # remove NA columns
+  keepcols <- character()
+  if (nacols.rm) {
+    for (c in colnames(data.df)) {
+      if (!all(is.na(data.df[[c]]))) {
+        keepcols <- c(keepcols, c)
+      }
+    }
+    data.df <- data.df[ , keepcols, drop = FALSE]
   }
 
-  # add comment with file and import data
-  comment(data.df) <-
-    paste("File \"", basename(file), "\" created on ",
+  # select columns using grep() for regex pattern matching on names
+  if (!length(cols.pattern) || !is.na(cols.pattern)) {
+    if (length(cols.pattern)) {
+      if (is.na(cols.pattern)) {
+        return(data.df)
+      }
+      data.cols <- grep(cols.pattern, x = colnames(data.df), value = TRUE)
+    } else {
+      data.cols <- grep("time", x = colnames(data.df), value = TRUE, invert = TRUE)
+    }
+    if (!length(data.cols)) {
+      warning("Returning only time values!! ",
+              "Selection pattern '", cols.pattern,
+              "' did not match any data column",
+              ifelse(nacols.rm, " with non-missing data. ", ". "))
+    }
+    data.df <- data.df[ , c("time", data.cols), drop = FALSE]
+  }
+
+  # add comment attr with file and import data
+  comment.txt <-
+    paste("Data from a YoctoPuce module.\nFile \"",
+          basename(file), "\" created on ",
           strftime(file.info(file)[["ctime"]], "%Y-%m-%d %H:%M:%S"),
           " was imported on ",
           strftime(lubridate::now(), "%Y-%m-%d %H:%M:%S"),
           " using TZ = \"", tz, "\"",
           sep = "")
+  comment(data.df) <- paste(comment.txt, label, sep = "\n")
+
+  # add where.measured attribute
+  if (SunCalcMeeus::is_valid_geocode(geocode)) {
+    where_measured(data.df) <- geocode
+  }
+
+  # add yocotopuce.settings and how.measured attr with module metadata
+  if (length(settings.file)) {
+    settings.list <- jsonlite::read_json(settings.file,
+                                         simplifyVector = FALSE,
+                                         flatten = FALSE)
+
+    if (!length(settings.list[["api"]])) {
+      stop("File '", settings.file, "' parsing failure.")
+    }
+    # rename columns to logical names
+    if (cols.logical.names) {
+      channel.names <- grepv("genericSensor", names(settings.list$api))
+      logical.names <- character(length(channel.names))
+      for (i in seq_along(channel.names)) {
+        logical.names[i] <- settings.list[["api"]][[i]][["logicalName"]]
+        if (logical.names[i] == "") {
+          logical.names[i] <- channel.names[i]
+        }
+      }
+      col.names <- colnames(data.df)
+      for (n in col.names) {
+        if (n %in% names(logical.names)) {
+          gsub(n, logical.names[n], col.names)
+        }
+      }
+      colnames(data.df) <- col.names
+    }
+
+    attr(data.df, "yocto.module.settings") <- settings.list
+    how_measured(data.df) <-
+      paste("USB module ",
+            ifelse(settings.list$api$module$logicalName != "",
+                   paste("named '",
+                         settings.list$api$module$logicalName,
+                         "' type '", sep = ""),
+                   "type '"),
+            settings.list$api$module$productName, "', s.n. '",
+            settings.list$api$module$serialNumber, "' with firmware '",
+            settings.list$api$module$firmwareRelease, "'.", sep = "")
+  }
 
   data.df
+
 }
 
 #' @rdname read_yocto_logger_csv
@@ -109,12 +287,16 @@ read_yocto_logger_csv <- function(file,
 #' @export
 #'
 read_yocto_spectral_csv <- function(file,
+                                    settings.file = NULL,
                                     cols.pattern = "avg",
                                     cols.rename = TRUE,
                                     dec = ".", sep = ";", tz = "UTC", ...) {
 
   data.df <- read_yocto_logger_csv(file,
+                                   settings.file = settings.file,
                                    cols.pattern = cols.pattern,
+                                   cols.logical.names = FALSE,
+                                   nacols.rm = FALSE,
                                    dec = dec, sep = sep, tz = tz, ...)
 
   # get sensor metadata

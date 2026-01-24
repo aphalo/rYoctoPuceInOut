@@ -15,5 +15,5 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(AS7343)
+library(rYoctoPuceInOut)
 ```

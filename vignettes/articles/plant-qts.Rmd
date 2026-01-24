@@ -24,7 +24,7 @@ library(photobiologyLamps)
 library(ggspectra)
 library(ggpmisc)
 library(smatr)
-library(AS7343)
+library(rYoctoPuceInOut)
 ```
 
 ```{r}

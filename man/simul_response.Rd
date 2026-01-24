@@ -8,6 +8,7 @@
 simul_response(
   source.spct,
   sensor.mspct,
+  norm = "skip",
   range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   time.unit = NULL,
@@ -16,6 +17,7 @@ simul_response(
 
 simul_AS7343(
   source.spct,
+  range = NULL,
   unit.out = getOption("photobiology.radiation.unit", default = "energy"),
   time.unit = NULL,
   scale.factor = 1
@@ -26,6 +28,12 @@ simul_AS7343(
 
 \item{sensor.mspct}{responce_spct or response_mspct object Light sensor
 spectral responsiveness, one or more channels.}
+
+\item{norm}{numeric Normalization wavelength (nm) or character string "max",
+or "min" for normalization at the corresponding wavelength, "update" to
+update the normalization after modifying units of expression, quantity
+or range but respecting the previously used criterion, "undo" to revert
+an existing normalization or "skip" to force return of \code{x} unchanged.}
 
 \item{range}{numeric vector of length two Range of wavelengths to use
 (nanometres, nm)}
@@ -49,8 +57,10 @@ for each sensor channel.
 }
 \examples{
 library(photobiologySensors)
-simul_response(sun.spct, ams_AS7343.spct)
+
+simul_response(sun.spct, sensors.mspct$ams_AS7343, norm = "undo")
 simul_response(sun.spct, ccd.spct)
+simul_response(sun.spct, ccd.spct, range = c(400, 700))
 simul_response(sun.spct, ccd.spct, unit.out = "photon")
 
 simul_AS7343(sun.spct, unit.out = "photon")

@@ -6,6 +6,7 @@
 #' @param range numeric vector of length two Range of wavelengths to use
 #'   (nanometres, nm)
 #' @inheritParams photobiology::response
+#' @inheritParams photobiology::normalize
 #'
 #' @details Compute sensor response spectrum by convolution of light source
 #'   emission spectrum or illumination spectrum and the responsiveness spectrum
@@ -18,8 +19,10 @@
 #'
 #' @examples
 #' library(photobiologySensors)
-#' simul_response(sun.spct, ams_AS7343.spct)
+#'
+#' simul_response(sun.spct, sensors.mspct$ams_AS7343, norm = "undo")
 #' simul_response(sun.spct, ccd.spct)
+#' simul_response(sun.spct, ccd.spct, range = c(400, 700))
 #' simul_response(sun.spct, ccd.spct, unit.out = "photon")
 #'
 #' simul_AS7343(sun.spct, unit.out = "photon")
@@ -27,6 +30,7 @@
 simul_response <-
   function(source.spct,
            sensor.mspct,
+           norm = "skip",
            range = NULL,
            unit.out = getOption("photobiology.radiation.unit",
                                 default = "energy"),
@@ -39,12 +43,14 @@ simul_response <-
     if (photobiology::is.response_spct(sensor.mspct)) {
       sensor.mspct <- photobiology::subset2mspct(sensor.mspct)
     }
+    sensor.mspct <-
+      photobiology::normalise(sensor.mspct, range = range, norm = norm)
     stopifnot("'source.spct' wrong class" =
                 photobiology::is.source_spct(source.spct))
     stopifnot("'sensor.mspct' wrong class" =
                 photobiology::is.response_mspct(sensor.mspct))
-    source.spct <- photobiology::trim_wl(source.spct, fill = 0)
-    sensor.mspct <- photobiology::trim_wl(sensor.mspct, fill = 0)
+    source.spct <- photobiology::trim_wl(source.spct, range = range, fill = 0)
+    sensor.mspct <- photobiology::trim_wl(sensor.mspct, range = range, fill = 0)
 
     channel.responses.mspct <- photobiology::response_mspct()
 
@@ -71,15 +77,15 @@ simul_response <-
 #' @export
 #'
 simul_AS7343 <- function(source.spct,
+                         range = NULL,
                          unit.out = getOption("photobiology.radiation.unit",
                                               default = "energy"),
                          time.unit = NULL,
                          scale.factor = 1) {
-  ams_AS7343.mspct <-
-    photobiology::normalise(photobiologySensors::sensors.mspct[["ams_AS7343"]],
-                            norm = "undo")
+  ams_AS7343.spct <- photobiologySensors::sensors.mspct[["ams_AS7343"]]
+  ams_AS7343.spct <- photobiology::normalise(ams_AS7343.spct, norm = "undo")
   simul_response(source.spct = source.spct,
-                 sensor.mspct = ams_AS7343.mspct,
+                 sensor.mspct = ams_AS7343.spct,
                  range = range(source.spct),
                  unit.out = unit.out,
                  time.unit = time.unit,

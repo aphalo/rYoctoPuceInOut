@@ -8,7 +8,12 @@
 \usage{
 read_yocto_logger_csv(
   file,
+  geocode = NULL,
+  label = NULL,
+  settings.file = NULL,
   cols.pattern = NULL,
+  cols.logical.names = FALSE,
+  nacols.rm = is.null(cols.pattern),
   dec = ".",
   sep = ";",
   tz = "UTC",
@@ -17,6 +22,7 @@ read_yocto_logger_csv(
 
 read_yocto_spectral_csv(
   file,
+  settings.file = NULL,
   cols.pattern = "avg",
   cols.rename = TRUE,
   dec = ".",
@@ -49,9 +55,26 @@ AS7343_metadata()
     \code{\link{url}}.)
   }
 
+\item{geocode}{data.frame Containing columns \code{lon} and \code{lat} used
+to set attribute \code{"where.measured"}.}
+
+\item{label}{character Additional text to be appended to the default
+value used to set attribute \code{"comment"}.}
+
+\item{settings.file}{character Path to a JSON file containing the module
+settings used to acquire the data.}
+
 \item{cols.pattern}{character A string suitable as argument for
 \code{pattern} in a call to \code{grep()}. \code{NULL} or
-\code{characte(0)} retain all columns.}
+\code{characte(0)} retain all data columns, while \code{NA} returns
+all data and time columns.}
+
+\item{cols.logical.names}{logical Use logical names from module
+metadata instead of column heading in CSV file. Require readable
+\code{settings.file}.}
+
+\item{nacols.rm}{logical If \code{TRUE} delete columns that contain only
+\code{NA} values.}
 
 \item{dec}{the character used in the file for decimal points.}
 
@@ -99,9 +122,14 @@ must be a time zone that is recognized by the user's OS.}
 sensor IC specification as column names, and if \code{FALSE} keep the
 names used in the imported file.}
 }
+\value{
+A data frame with \code{POSIXct} time stamps in column \code{time}
+and data in a variable number of columns containing values converted by
+\code{\link[utils:read.table]{read.csv}()}.
+}
 \description{
-Functions able to directly read and validate data from .CSV files from
-the dataloggers biult into YoctoPuce USB modules.
+Functions able to directly read and validate data from .CSV files created by
+the data loggers built into YoctoPuce USB modules.
 }
 \details{
 The dataloggers implemented in different USB modules from
@@ -109,30 +137,111 @@ YoctoPuce return .CSV files with a consistent format, that varies only
 in the number of data columns and their names. Function
 \code{read_yocto_logger()} reads any of these files preserving column
 names. The UTC times are converted into \code{POSIXct} values and added
-under column \code{time}.
+under column \code{time}. A subset of columns can be requested by
+passing a regular expression to be used in a call to \code{grep()} on the
+column names. If \code{nacols.rm = TRUE} is passed, columns containing only
+\code{NA} values are deleted, as these columns in most cases correspond
+to logger channels that are not in use.
 
-Warnings are issued if something unexpected is encountered in the sequence
-of UNIX time stamps in the file.
+Warnings are issued if something unexpected, such as dates several years
+into the past, unsorted or repeated time stamps
+are encountered in the sequence of UNIX time stamps in the file. These
+discrepancies can occur when the modules' or the YoctoHub clocks do not
+acquire a valid time at start-up. Inconsistent time steps are reported
+through a message, as these are the result of a stop followed by restart
+of logging. During such a pause it is possible that module settings could
+have been changed.
+
+If the name of a JSON file as saved from the YoctoPuce module is passed as
+an argument to parameter \code{settings.file} its contents parse into an
+R list will be saved to attribute \code{yoctopuce.settings} in the returned
+data frame.
+
+Function \code{read_yocto_spectral_csv()} is a wrapper on
+\code{read_yocto_logger()} that renames columns using the names used in
+the data sheet for the AS7343 sensor.
 
 In modules with multiple channels, the user can enable and disable logging
 on a channel by channel basis. Thus, the number of data columns can vary,
 making it necessary to match columns by name when replacing some of the
-default names by shorter or more informative ones. Currently, the
-replacement names are hard coded.
+default names by shorter or more informative ones.
 }
+\section{Warning!}{
+ The units and basis of expression, and in several cases
+even the physical quantity measured cannot be decoded from the CSV files.
+The values in the returned data frame are those read from the file, and
+the read values have to be interpreted based on the settings and, possibly,
+scripts used during data acquisition by the USB module. These settings
+if available in a JSON file downloaded from the module can be stored in
+attribute \code{yoctopuce.settings} of the data frame returned.
+}
+
 \examples{
 yocto_meteo.file <-
   system.file("extdata", "yocto-meteo-snm.csv",
-            package = "AS7343", mustWork = TRUE)
+            package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_logger_csv(yocto_meteo.file)
 read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg")
 read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max")
 read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature")
+read_yocto_logger_csv(yocto_meteo.file, nrows = 5L)
+
+yocto_mv.file <-
+  system.file("extdata", "yocto-millivolt-Rx.csv",
+            package = "rYoctoPuceInOut", mustWork = TRUE)
+
+read_yocto_logger_csv(yocto_mv.file)
+
+yocto_v.file <-
+  system.file("extdata", "yocto-0-10V-Rx.csv",
+            package = "rYoctoPuceInOut", mustWork = TRUE)
+
+read_yocto_logger_csv(yocto_v.file)
+read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg")
+read_yocto_logger_csv(yocto_v.file, cols.pattern = "min|max")
+read_yocto_logger_csv(yocto_v.file, cols.pattern = "Sensor2")
+
+yocto_serial.file <-
+  system.file("extdata", "yocto-serial.csv",
+            package = "rYoctoPuceInOut", mustWork = TRUE)
+yocto_serial_settings.file <-
+  system.file("extdata", "YSERIAL1-EAD24.json",
+            package = "rYoctoPuceInOut", mustWork = TRUE)
+
+read_yocto_logger_csv(yocto_serial.file)
+read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE)
+read_yocto_logger_csv(yocto_serial.file, cols.pattern = "avg")
+read_yocto_logger_csv(yocto_serial.file, cols.pattern = "min|max")
+read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$")
+data.tb <-
+  read_yocto_logger_csv(yocto_serial.file, yocto_serial_settings.file)
+how_measured(data.tb)
+colnames(data.tb)
+
+yocto_i2c.file <-
+  system.file("extdata", "yocto-i2c-tsl2591.csv",
+            package = "rYoctoPuceInOut", mustWork = TRUE)
+
+read_yocto_logger_csv(yocto_i2c.file)
+read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg")
+read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "min|max")
+read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor1[.]")
+read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]")
+read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg", nacols.rm = TRUE)
+read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]avg")
+
+yocto_CO2.file <-
+  system.file("extdata", "yocto-CO2-V1.csv",
+            package = "rYoctoPuceInOut", mustWork = TRUE)
+
+read_yocto_logger_csv(yocto_CO2.file)
+read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg")
+read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "min|max")
 
 yocto_spectral.file <-
   system.file("extdata", "yocto-spectral-LED.csv",
-            package = "AS7343", mustWork = TRUE)
+            package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_spectral_csv(yocto_spectral.file)
 read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE)
@@ -140,4 +249,8 @@ read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\\\.")
 
 AS7343_metadata()
 
+}
+\references{
+Documentation for each YocotoPuce USB module is available at
+\url{https://www.yoctopuce.com/}.
 }

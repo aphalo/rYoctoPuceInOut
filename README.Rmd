@@ -13,17 +13,26 @@ knitr::opts_chunk$set(
 )
 ```
 
-# AS7343
+# rYoctoPuceInOut
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of AS7343 is to simulate the response of the AS7343 spectral sensor
-from asm OSRAM. Based on a light spectrum with high wavelength resolution
-simulate the response of each of the 13 channels of the AS7343 digital spectral
-sensor, or any other sensor. With the simulations of channels responses further
-analysis will attempt to retrieve quantities of interest such as PAR, ePAR, 
+The goal of 'rYoctoPuceInOut' is to facilitate the import of data saved by
+the built-in logger of various USB modules made by YoctoPuce. File import 
+functions as well as auxiliary functions that easy the use of the logged data
+are provided. These additional functions currently target the AS7343 digital 
+spectral sensor from AMS-Osram used in the *YoctoSpectral* module.
+
+The simulations of channels responses of the AS7343 makes possible *in-silico*
+simulations of the retrieval specific quantities of interest such as PAR, ePAR, 
 UVA:PAR, R:FR and B:G ratios.
+
+The package includes CSV files with data logged by a selection of different USB
+USB modules from *YoctoPuce*.
+
+Package 'rYoctoPuceInOut' is an extension of the R for photobiology suite of
+R packages.
 
 ## Installation
 
@@ -31,7 +40,7 @@ You can install the development version of AS7343 with:
 
 ```{r, eval=FALSE}
 remotes::install_github("aphalo/AS7343")
-packageVersion("AS7343")
+packageVersion("rYoctoPuceInOut")
 ```
 
 ## Example
@@ -40,12 +49,29 @@ This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
 library(AS7343)
-library(ggspectra)
-simul_response(sun.spct, ams_AS7343.spct, 
-               unit.out = "photon",
-               scale.factor = 1e-6) |>
-  ggplot(aes(spct.idx, .data[["R[/q]_Total"]])) +
-  geom_col()
+simul_AS7343(sun.spct, 
+             unit.out = "photon",
+             scale.factor = 1e-6)
 ```
 
+```{r}
+yocto_meteo.file <-
+  system.file("extdata", "yocto-meteo-snm.csv",
+              package = "AS7343", mustWork = TRUE)
+
+head(read_yocto_logger_csv(yocto_meteo.file), 5)
+head(read_yocto_logger_csv(yocto_meteo.file, 
+                           cols.pattern = "avg"), 5)
+head(read_yocto_logger_csv(yocto_meteo.file,
+                           cols.pattern = "temperature"), 5)
+```
+
+```{r}
+yocto_spectral.file <-
+   system.file("extdata", "yocto-spectral-LED.csv",
+             package = "AS7343", mustWork = TRUE)
+
+head(read_yocto_spectral_csv(yocto_spectral.file,
+                             cols.pattern = "avg"), 5)
+```
 
