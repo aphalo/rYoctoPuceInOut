@@ -39,8 +39,10 @@ navbar:
       menu:
       - text: 'User Guide'
         href: articles/user-guide.html
-      - text: 'AS7343 Simulations'
+      - text: 'Small data set AS7343 Simulations'
         href: articles/plant-qts.html
+      - text: 'Large data set AS7343 Simulations'
+        href: articles/simul-calibration.html
     tutorials:
       text: Resources
       menu:

@@ -47,7 +47,7 @@ autoplot(ams_AS7343.mspct, norm = "undo")
 ## Hourly sunlight spectra
 
 ```{r, eval = TRUE}
-load("kumpula-all-hourly-mspct-anders-lindfors.rda")
+load("data/kumpula-all-hourly-mspct-anders-lindfors.rda")
 test.hourly.mspct <- all_hourly.mspct
 length(all_hourly.mspct)
 test.hourly.mspct <-
@@ -57,7 +57,7 @@ test.hourly.mspct <-
 ## Assorted greenhouse spectra
 
 ```{r}
-load("greenhouse-mspct.rda")
+load("data/greenhouse-mspct.rda")
 length(greenhouse.mspct)
 test.mspct <- c(greenhouse.mspct, test.hourly.mspct)
 length(test.mspct)
@@ -120,7 +120,7 @@ all_data.tb[["Pfr.Ptot"]] <- PfrPtot
 ```
 
 ```{r}
-save(all_data.tb, file = "all-hourly-summaries.rda")
+save(all_data.tb, file = "data/all-hourly-summaries.rda")
 ```
 
 

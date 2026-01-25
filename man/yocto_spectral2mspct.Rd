@@ -4,11 +4,16 @@
 \alias{yocto_spectral2mspct}
 \title{Yocto-Spectral to spectra}
 \usage{
-yocto_spectral2mspct(x)
+yocto_spectral2mspct(df, channels = "all")
 }
 \arguments{
-\item{x}{data.frame With only one of average, minimum or maximum sensor
-counts.}
+\item{df}{data.frame With only one of average, minimum or maximum sensor
+counts for the channels.}
+
+\item{channels}{character vector of length one or longer. In addition to a
+vector of spectral sensor channel names as used in the AS7343
+documentation, the nicknames \code{"all"}, \code{"wide"}, \code{"narrow"}
+and \code{"xyz"} as vectors of length one are accepted.}
 }
 \description{
 Convert a data frame with data imported with \code{read_yocto_spectral_csv()}
