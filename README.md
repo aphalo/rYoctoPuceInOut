@@ -8,13 +8,13 @@
 <!-- badges: end -->
 
 The goal of ‘rYoctoPuceInOut’ is to facilitate the import of data saved
-by the built-in logger of various USB modules made by YoctoPuce. File
-import functions as well as auxiliary functions that easy the use of the
-logged data are provided. These additional functions currently target
-the AS7343 digital spectral sensor from AMS-Osram used in the
-*YoctoSpectral* module.
+by the built-in logger of various USB modules made by
+[YoctoPuce](https://www.yoctopuce.com/). File import functions as well
+as auxiliary functions that easy the use of the logged data are
+provided. These additional functions currently target the AS7343 digital
+spectral sensor from AMS-Osram used in the *YoctoSpectral* module.
 
-The simulations of channels responses of the AS7343 makes possible
+The simulations of channel responses of the AS7343 makes possible
 *in-silico* simulations of the retrieval specific quantities of interest
 such as PAR, ePAR, UVA:PAR, R:FR and B:G ratios.
 
@@ -26,14 +26,14 @@ suite of R packages.
 
 ## Installation
 
-You can install the development version of AS7343 with:
+You can install the development version of ‘rYoctoPuceInOut’ with:
 
 ``` r
-remotes::install_github("aphalo/AS7343")
+remotes::install_github("aphalo/rYoctoPuceInOut")
 packageVersion("rYoctoPuceInOut")
 ```
 
-## Example
+## Examples
 
 This is a basic example which shows you how to solve a common problem:
 
@@ -66,10 +66,10 @@ simul_AS7343(sun.spct,
 ``` r
 yocto_meteo.file <-
   system.file("extdata", "yocto-meteo-snm.csv",
-              package = "AS7343", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 head(read_yocto_logger_csv(yocto_meteo.file), 5)
-#> Period: 2025-08-07 19:32:05 to 2025-08-08 01:23:00
+#> Period: 2025-08-07 19:32:05 to 2025-08-07 22:50:00
 #> Found gaps, time steps range from 55s to 60s (~1 minutes)
 #>                  time humidity.min humidity.avg humidity.max pressure.min
 #> 1 2025-08-07 16:32:05       53.310       53.310       53.310     1012.712
@@ -85,7 +85,7 @@ head(read_yocto_logger_csv(yocto_meteo.file), 5)
 #> 5     1012.468     1012.525          23.506          23.510          23.517
 head(read_yocto_logger_csv(yocto_meteo.file, 
                            cols.pattern = "avg"), 5)
-#> Period: 2025-08-07 19:32:05 to 2025-08-08 01:23:00
+#> Period: 2025-08-07 19:32:05 to 2025-08-07 22:50:00
 #> Found gaps, time steps range from 55s to 60s (~1 minutes)
 #>                  time humidity.avg pressure.avg temperature.avg
 #> 1 2025-08-07 16:32:05       53.310     1012.716          23.495
@@ -95,7 +95,7 @@ head(read_yocto_logger_csv(yocto_meteo.file,
 #> 5 2025-08-07 16:36:05       53.794     1012.468          23.510
 head(read_yocto_logger_csv(yocto_meteo.file,
                            cols.pattern = "temperature"), 5)
-#> Period: 2025-08-07 19:32:05 to 2025-08-08 01:23:00
+#> Period: 2025-08-07 19:32:05 to 2025-08-07 22:50:00
 #> Found gaps, time steps range from 55s to 60s (~1 minutes)
 #>                  time temperature.min temperature.avg temperature.max
 #> 1 2025-08-07 16:32:05          23.495          23.495          23.495
@@ -108,12 +108,12 @@ head(read_yocto_logger_csv(yocto_meteo.file,
 ``` r
 yocto_spectral.file <-
    system.file("extdata", "yocto-spectral-LED.csv",
-             package = "AS7343", mustWork = TRUE)
+             package = "rYoctoPuceInOut", mustWork = TRUE)
 
 head(read_yocto_spectral_csv(yocto_spectral.file,
                              cols.pattern = "avg"), 5)
-#> Period: 2025-12-03 21:54:00 to 2025-12-04 03:33:00
-#> Found gaps, time steps range from 2s to 16114s (~4.48 hours)
+#> Period: 2025-12-03 21:54:00 to 2025-12-03 22:52:14
+#> Found gaps, time steps range from 10s to 60s (~1 minutes)
 #>                  time     F1.avg     F2.avg      FZ.avg    F3.avg      F4.avg
 #> 1 2025-12-03 19:54:00  0.0000000  0.0000000  0.01923449  0.000000  0.01892148
 #> 2 2025-12-03 19:55:00 14.8170959 13.2602612 10.70854803 14.034536 14.68704875

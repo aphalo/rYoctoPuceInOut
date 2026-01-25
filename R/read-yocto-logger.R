@@ -79,12 +79,16 @@
 #'
 #' yocto_meteo.file <-
 #'   system.file("extdata", "yocto-meteo-snm.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #' yocto_meteo_json.file <-
 #'   system.file("extdata", "METEOMK2-19A230.json",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_logger_csv(yocto_meteo.file) |> head(n = 5)
+#' meteo1.df <- read_yocto_logger_csv(yocto_meteo.file)
+#' head(meteo1.df, n = 5)
+#' cat(comment(meteo1.df))
+#' cat(how_measured(meteo1.df))
+#'
 #' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg") |>
 #'   head(n = 5)
 #' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max") |>
@@ -94,14 +98,24 @@
 #' read_yocto_logger_csv(yocto_meteo.file, nrows = 4L)
 #'
 #' # metadata from JSON file
-#' data.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file)
-#' how_measured(data.df)
+#' meteo2.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file)
+#' head(meteo2.df, n = 5)
+#' cat(comment(meteo2.df))
+#' cat(how_measured(meteo2.df))
+#'
+#' meteo3.df <- read_yocto_logger_csv(yocto_meteo.file,
+#'                                    yocto_meteo_json.file,
+#'                                    cols.logical.names = TRUE)
+#' head(meteo3.df, n = 5)
+#' cat(comment(meteo3.df))
+#' cat(how_measured(meteo3.df))
+#' str(attr(meteo3.df, "yocto.module.settings"), max.level = 2)
 #'
 #' # Yocto-Millivolt-Rx module
 #'
 #' yocto_mv.file <-
 #'   system.file("extdata", "yocto-millivolt-Rx.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_logger_csv(yocto_mv.file) |> head(n = 5)
 #'
@@ -109,7 +123,7 @@
 #'
 #' yocto_v.file <-
 #'   system.file("extdata", "yocto-0-10V-Rx.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_logger_csv(yocto_v.file) |> head(n = 5)
 #' read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg") |> head(n = 5)
@@ -120,30 +134,30 @@
 #'
 #' yocto_serial.file <-
 #'   system.file("extdata", "yocto-serial.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #' yocto_serial_settings.file <-
 #'   system.file("extdata", "YSERIAL1-EAD24.json",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_logger_csv(yocto_serial.file) |> head(n = 5)
 #' read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE) |> head(n = 2)
-#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "avg") |> head(n = 5)
 #' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$") |>
 #'   head(n = 5)
 #'
 #' # metadata from JSON file
-#' data.tb <-
+#' serial.tb <-
 #'   read_yocto_logger_csv(yocto_serial.file,
 #'                         yocto_serial_settings.file,
 #'                         cols.logical.names = TRUE)
-#' how_measured(data.tb)
-#' colnames(data.tb)
+#' cat(comment(serial.tb))
+#' cat(how_measured(serial.tb))
+#' colnames(serial.tb)
 #'
 #' # Yocto-I2C module
 #'
 #' yocto_i2c.file <-
 #'   system.file("extdata", "yocto-i2c-tsl2591.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_logger_csv(yocto_i2c.file) |> head(n = 5)
 #' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg") |>
@@ -163,7 +177,7 @@
 #'
 #' yocto_CO2.file <-
 #'   system.file("extdata", "yocto-CO2-V1.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_logger_csv(yocto_CO2.file) |> head(n = 5)
 #' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg") |> head(n = 5)
@@ -173,10 +187,10 @@
 #'
 #' yocto_spectral.file <-
 #'   system.file("extdata", "yocto-spectral-LED.csv",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #' yocto_spectral_json.file <-
 #'   system.file("extdata", "SPECTRL1-2CF3B6.json",
-#'             package = "rYoctoPuceInOut", mustWork = TRUE)
+#'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
 #' read_yocto_spectral_csv(yocto_spectral.file) |> head(n = 5)
 #' read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\.") |>
@@ -185,9 +199,11 @@
 #'   head(n = 5)
 #'
 #' # metadata from JSON file
-#' spct.df <- read_yocto_spectral_csv(yocto_spectral.file,
-#'                                    yocto_spectral_json.file) |> head(n = 5)
-#' how_measured(spct.df)
+#' spectral.df <-
+#'   read_yocto_spectral_csv(yocto_spectral.file,
+#'                           yocto_spectral_json.file) |> head(n = 5)
+#' cat(how_measured(spectral.df))
+#' cat(comment(spectral.df))
 #'
 #' AS7343_metadata()
 #'
@@ -217,7 +233,7 @@ read_yocto_logger_csv <- function(file,
   if (length(unique(diff(data.df[["UNIX.time"]]))) > 1L) {
     message("Found gaps, time steps range from ",
             paste(lubridate::as.duration(
-              range(unique(diff(data.df[["UNIX.time"]])))),
+              signif(range(unique(diff(data.df[["UNIX.time"]]))), digits = 3)),
                   collapse = " to "))
   }
   if (anyNA(data.df[["UNIX.time"]])) {
@@ -262,13 +278,26 @@ read_yocto_logger_csv <- function(file,
   }
 
   # add comment attr with file and import data
+  if (length(settings.file)) {
+    settings.file.text <-
+      paste("Metadata file \"",
+            basename(settings.file), "\" created on ",
+            strftime(file.info(settings.file)[["ctime"]],
+                     "%Y-%m-%d %H:%M:%S.\n"),
+            sep = "")
+  } else {
+    settings.file.text <- character(0L)
+  }
+
   comment.txt <-
-    paste("Data from a YoctoPuce module.\nFile \"",
+    paste("Data logged by a YoctoPuce USB module.\nData file \"",
           basename(file), "\" created on ",
-          strftime(file.info(file)[["ctime"]], "%Y-%m-%d %H:%M:%S"),
-          " was imported on ",
+          strftime(file.info(file)[["ctime"]], "%Y-%m-%d %H:%M:%S.\n"),
+          settings.file.text,
+          "Imported on ",
           strftime(lubridate::now(), "%Y-%m-%d %H:%M:%S"),
-          " using TZ = \"", tz, "\"",
+          " using TZ = \"", tz, "\" with 'rYoctoPuceInOut' (== ",
+          utils::packageVersion("rYoctoPuceInOut"), ").",
           sep = "")
   comment(data.df) <- paste(comment.txt, label, sep = "\n")
 
@@ -287,25 +316,74 @@ read_yocto_logger_csv <- function(file,
       stop("File '", settings.file, "' parsing failure.")
     }
     # rename columns to logical names
-    if (cols.logical.names) {
-      channel.names <- grepv("genericSensor", names(settings.list$api))
-      logical.names <- character(length(channel.names))
-      for (i in seq_along(channel.names)) {
-        logical.names[i] <- settings.list[["api"]][[i]][["logicalName"]]
-        if (logical.names[i] == "") {
-          logical.names[i] <- channel.names[i]
-        }
+    known.channel.names <-
+      c("genericSensor", # Yocto-Serial, Yocto-RS232, Yocto-RS485, Yocto-SDI12, Yocto-I2C, Yocto-SPI, Yocto-Millivolt-Rx, Yocto-0-10V-Rx, Yocto-4-20mA-Rx
+        "spectralChannel", # Yocto-Spectral
+        "temperature", "humidity", "pressure", # Yocto-Meteo, Yocto-CO2 (V2)
+        "carbonDioxide", # Yocto-CO2 (V1, V2)
+        "lightSensor", # Yocto-Light (V1, V2, V3, V4, V5)
+        "voc", "tvoc", # Yocto-VOC
+        # to add Yocto-3D, Yocto-Inclinometer
+        # to add Yocto-GPS
+        "altitude", # Yocto-Altimeter
+        "proximity", # Yocto-Proximity
+        "rangeFinder", # Yocto-RangeFinder
+        "current", # Yocto-Amp
+        "weighScale", "multiCellWeighScale", # Yocto-Bridge, Yocto-MaxiBridge
+        # to add Yocto-MaxiMicroVolt-Rx
+        "voltage", "current", "power" # Yocto-Volt, Yocto-Watt
+      )
+    channel.names <-
+      grep(paste(known.channel.names, collapse = "|"),
+           names(settings.list$api), value = TRUE)
+
+    # keep channel names for which there are data columns
+    unique(gsub("\\.avg|\\.min|\\.max", "", data.cols))
+    channel.names <-
+      intersect(channel.names,
+                unique(gsub("\\.avg|\\.min|\\.max", "", data.cols)))
+
+    print(channel.names)
+
+    logical.names <- character(length(channel.names))
+    channel.units <- character(length(channel.names))
+    for (i in seq_along(channel.names)) {
+      logical.names[i] <-
+        settings.list[["api"]][[channel.names[i]]][["logicalName"]]
+      if (logical.names[i] == "") {
+        logical.names[i] <- channel.names[i]
       }
+      if ("unit" %in% names(settings.list[["api"]][[channel.names[i]]])) {
+        channel.units[i] <-settings.list[["api"]][[channel.names[i]]][["unit"]]
+      }
+    }
+    names(logical.names) <- channel.names
+
+    if (cols.logical.names) {
+      # multiple columns can contain data from the same channel
+      # with names ending in .avg, .min, .max
       col.names <- colnames(data.df)
-      for (n in col.names) {
-        if (n %in% names(logical.names)) {
-          gsub(n, logical.names[n], col.names)
-        }
+      for (n in channel.names) {
+        col.names <- gsub(n, logical.names[n], col.names)
       }
       colnames(data.df) <- col.names
+      names(channel.units) <- logical.names
+    } else {
+      names(channel.units) <- channel.names
     }
 
     attr(data.df, "yocto.module.settings") <- settings.list
+    if (length(channel.units) && any(channel.units != "")) {
+      channel.units.txt <-
+        paste("Units: ",
+              paste(names(channel.units), ": ", channel.units,
+                    collapse = ", ", sep = ""), ".",
+              sep = "")
+      channel.units.txt <-
+        ifelse(channel.units.txt == "", "NA", channel.units.txt)
+    } else {
+      channel.units.txt <- "Units: not available."
+    }
     how_measured(data.df) <-
       paste("USB module ",
             ifelse(settings.list$api$module$logicalName != "",
@@ -313,9 +391,10 @@ read_yocto_logger_csv <- function(file,
                          settings.list$api$module$logicalName,
                          "' type '", sep = ""),
                    "type '"),
-            settings.list$api$module$productName, "', s.n. '",
+            settings.list$api$module$productName, "',\ns.n. '",
             settings.list$api$module$serialNumber, "' with firmware '",
-            settings.list$api$module$firmwareRelease, "'.", sep = "")
+            settings.list$api$module$firmwareRelease, "'.",
+            "\n", channel.units.txt, sep = "")
   }
 
   data.df

@@ -1,0 +1,6 @@
+{ "api":{
+"module":{"productName":"Yocto-0-10V-Rx","serialNumber":"RX010V01-1219AD","logicalName":"","productId":56,"productRelease":1,"firmwareRelease":"52887","persistentSettings":0,"luminosity":50,"beacon":0,"upTime":8625,"usbCurrent":65,"rebootCountdown":0,"userVar":0},
+"genericSensor1":{"logicalName":"A6cal365nm","advertisedValue":"0","unit":"W m-2","currentValue":0,"lowestValue":0,"highestValue":0,"currentRawValue":0,"logFrequency":"30/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":65536,"sensorState":0,"signalValue":0,"signalUnit":"V","signalRange":"0...10","valueRange":"0...8000","signalBias":0,"signalSampling":3,"enabled":1},
+"genericSensor2":{"logicalName":"E2cal365nm","advertisedValue":"0","unit":"W m-2","currentValue":0,"lowestValue":0,"highestValue":0,"currentRawValue":0,"logFrequency":"30/m","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":65536,"sensorState":0,"signalValue":0,"signalUnit":"V","signalRange":"0...10","valueRange":"0...8000","signalBias":0,"signalSampling":2,"enabled":1},
+"dataLogger":{"logicalName":"","advertisedValue":"ON","currentRunIndex":4,"timeUTC":1769352696,"recording":1,"autoStart":1,"beaconDriven":0,"usage":3,"clearHistory":0}}, "extras":[],
+"files":[]}

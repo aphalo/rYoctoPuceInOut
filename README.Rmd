@@ -19,12 +19,13 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The goal of 'rYoctoPuceInOut' is to facilitate the import of data saved by
-the built-in logger of various USB modules made by YoctoPuce. File import 
+the built-in logger of various USB modules made by 
+[YoctoPuce](https://www.yoctopuce.com/). File import 
 functions as well as auxiliary functions that easy the use of the logged data
 are provided. These additional functions currently target the AS7343 digital 
 spectral sensor from AMS-Osram used in the *YoctoSpectral* module.
 
-The simulations of channels responses of the AS7343 makes possible *in-silico*
+The simulations of channel responses of the AS7343 makes possible *in-silico*
 simulations of the retrieval specific quantities of interest such as PAR, ePAR, 
 UVA:PAR, R:FR and B:G ratios.
 
@@ -36,14 +37,14 @@ R packages.
 
 ## Installation
 
-You can install the development version of AS7343 with:
+You can install the development version of 'rYoctoPuceInOut' with:
 
 ```{r, eval=FALSE}
-remotes::install_github("aphalo/AS7343")
+remotes::install_github("aphalo/rYoctoPuceInOut")
 packageVersion("rYoctoPuceInOut")
 ```
 
-## Example
+## Examples
 
 This is a basic example which shows you how to solve a common problem:
 
@@ -57,7 +58,7 @@ simul_AS7343(sun.spct,
 ```{r}
 yocto_meteo.file <-
   system.file("extdata", "yocto-meteo-snm.csv",
-              package = "AS7343", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 head(read_yocto_logger_csv(yocto_meteo.file), 5)
 head(read_yocto_logger_csv(yocto_meteo.file, 
@@ -69,7 +70,7 @@ head(read_yocto_logger_csv(yocto_meteo.file,
 ```{r}
 yocto_spectral.file <-
    system.file("extdata", "yocto-spectral-LED.csv",
-             package = "AS7343", mustWork = TRUE)
+             package = "rYoctoPuceInOut", mustWork = TRUE)
 
 head(read_yocto_spectral_csv(yocto_spectral.file,
                              cols.pattern = "avg"), 5)

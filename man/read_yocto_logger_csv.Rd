@@ -181,12 +181,16 @@ attribute \code{yoctopuce.settings} of the data frame returned.
 
 yocto_meteo.file <-
   system.file("extdata", "yocto-meteo-snm.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 yocto_meteo_json.file <-
   system.file("extdata", "METEOMK2-19A230.json",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
-read_yocto_logger_csv(yocto_meteo.file) |> head(n = 5)
+meteo1.df <- read_yocto_logger_csv(yocto_meteo.file)
+head(meteo1.df, n = 5)
+cat(comment(meteo1.df))
+cat(how_measured(meteo1.df))
+
 read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg") |>
   head(n = 5)
 read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max") |>
@@ -196,14 +200,24 @@ read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature") |>
 read_yocto_logger_csv(yocto_meteo.file, nrows = 4L)
 
 # metadata from JSON file
-data.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file)
-how_measured(data.df)
+meteo2.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file)
+head(meteo2.df, n = 5)
+cat(comment(meteo2.df))
+cat(how_measured(meteo2.df))
+
+meteo3.df <- read_yocto_logger_csv(yocto_meteo.file,
+                                   yocto_meteo_json.file,
+                                   cols.logical.names = TRUE)
+head(meteo3.df, n = 5)
+cat(comment(meteo3.df))
+cat(how_measured(meteo3.df))
+str(attr(meteo3.df, "yocto.module.settings"), max.level = 2)
 
 # Yocto-Millivolt-Rx module
 
 yocto_mv.file <-
   system.file("extdata", "yocto-millivolt-Rx.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_logger_csv(yocto_mv.file) |> head(n = 5)
 
@@ -211,7 +225,7 @@ read_yocto_logger_csv(yocto_mv.file) |> head(n = 5)
 
 yocto_v.file <-
   system.file("extdata", "yocto-0-10V-Rx.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_logger_csv(yocto_v.file) |> head(n = 5)
 read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg") |> head(n = 5)
@@ -222,30 +236,30 @@ read_yocto_logger_csv(yocto_v.file, cols.pattern = "Sensor2") |> head(n = 5)
 
 yocto_serial.file <-
   system.file("extdata", "yocto-serial.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 yocto_serial_settings.file <-
   system.file("extdata", "YSERIAL1-EAD24.json",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_logger_csv(yocto_serial.file) |> head(n = 5)
 read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE) |> head(n = 2)
-read_yocto_logger_csv(yocto_serial.file, cols.pattern = "avg") |> head(n = 5)
 read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$") |>
   head(n = 5)
 
 # metadata from JSON file
-data.tb <-
+serial.tb <-
   read_yocto_logger_csv(yocto_serial.file,
                         yocto_serial_settings.file,
                         cols.logical.names = TRUE)
-how_measured(data.tb)
-colnames(data.tb)
+cat(comment(serial.tb))
+cat(how_measured(serial.tb))
+colnames(serial.tb)
 
 # Yocto-I2C module
 
 yocto_i2c.file <-
   system.file("extdata", "yocto-i2c-tsl2591.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_logger_csv(yocto_i2c.file) |> head(n = 5)
 read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg") |>
@@ -265,7 +279,7 @@ read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]avg") |>
 
 yocto_CO2.file <-
   system.file("extdata", "yocto-CO2-V1.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_logger_csv(yocto_CO2.file) |> head(n = 5)
 read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg") |> head(n = 5)
@@ -275,10 +289,10 @@ read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "min|max") |> head(n = 5)
 
 yocto_spectral.file <-
   system.file("extdata", "yocto-spectral-LED.csv",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 yocto_spectral_json.file <-
   system.file("extdata", "SPECTRL1-2CF3B6.json",
-            package = "rYoctoPuceInOut", mustWork = TRUE)
+              package = "rYoctoPuceInOut", mustWork = TRUE)
 
 read_yocto_spectral_csv(yocto_spectral.file) |> head(n = 5)
 read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\\\.") |>
@@ -287,9 +301,11 @@ read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE) |>
   head(n = 5)
 
 # metadata from JSON file
-spct.df <- read_yocto_spectral_csv(yocto_spectral.file,
-                                   yocto_spectral_json.file) |> head(n = 5)
-how_measured(spct.df)
+spectral.df <-
+  read_yocto_spectral_csv(yocto_spectral.file,
+                          yocto_spectral_json.file) |> head(n = 5)
+cat(how_measured(spectral.df))
+cat(comment(spectral.df))
 
 AS7343_metadata()
 

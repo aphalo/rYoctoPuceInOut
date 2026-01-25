@@ -1,0 +1,5 @@
+{ "api":{
+"module":{"productName":"Yocto-CO2","serialNumber":"YCO2MK01-39F22","logicalName":"CO2","productId":39,"productRelease":1,"firmwareRelease":"69970","persistentSettings":0,"luminosity":50,"beacon":0,"upTime":24184,"usbCurrent":47,"rebootCountdown":0,"userVar":0},
+"carbonDioxide":{"logicalName":"","advertisedValue":"","unit":"ppm","currentValue":58785792,"lowestValue":58785792,"highestValue":61407232,"currentRawValue":58785792,"logFrequency":"12/h","reportFrequency":"OFF","advMode":1,"calibrationParam":"0,","resolution":65536,"sensorState":0,"abcPeriod":1636,"command":""},
+"dataLogger":{"logicalName":"","advertisedValue":"ON","currentRunIndex":4,"timeUTC":1769352391,"recording":1,"autoStart":1,"beaconDriven":0,"usage":1,"clearHistory":0}}, "extras":[],
+"files":[]}

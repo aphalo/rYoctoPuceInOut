@@ -1,6 +1,11 @@
 ---
 title: "User Guide"
-output: rmarkdown::html_vignette
+subtitle: "Package 'rYoctoPuceInOut' `r packageVersion('rYoctoPuceInOut')` "
+author: "Pedro J. Aphalo"
+date: "`r packageDate('rYoctoPuceInOut')`"
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{User Guide}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,4 +21,35 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(rYoctoPuceInOut)
+library(jsonlite)
 ```
+
+## The USB module settings
+
+Module settings can be saved from the configuration web interface of the modules or using the programing API. The configuration file uses the JSON format, and its structure is a nested list with a maximum depth of three.
+
+The package includes example configuration files for several different USB modules from YoctoPuce. The first step is to retrieve the path to the file in the current in use R library.
+
+```{r}
+yocto_meteo_json.file <-
+  system.file("extdata", "METEOMK2-19A230.json",
+              package = "rYoctoPuceInOut", mustWork = TRUE)
+```
+
+We can then read the file into an R `list`. At the root of the list we find `"module"`, `"extras"` and `"files"`. The `"module"` nested-list is always present, contains whole-module settings and one nested list for each "sensor" or sensor data channel, `"humidity"`, `"pressure"` and `"temperature"` in this case. In those modules with data logging capabilities the `"dataLogger"` nested list contains its settings. In this example, `"extras"` and `"files"` are empty.
+
+```{r}
+meteo.settings <- read_json(yocto_meteo_json.file)
+str(meteo.settings)
+```
+
+So, to ensure full reproducibility, when this is important, this list
+can be stored in the data frame containing the measured data. The only
+weakness is that data and settings are originally in separate files,
+and matching them when data are imported is not automated.
+
+The column headings in the .CSV file containing the logged data are always
+the same as the names of the corresponding nested lists in the settings.
+Users can assign an arbitrary logical name to the sensors and set or store
+unit of expression as part of the settings. Thus the settings file can
+be used to extract these metadata and store them as data frame attributes.
