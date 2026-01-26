@@ -53,3 +53,54 @@ the same as the names of the corresponding nested lists in the settings.
 Users can assign an arbitrary logical name to the sensors and set or store
 unit of expression as part of the settings. Thus the settings file can
 be used to extract these metadata and store them as data frame attributes.
+
+## Example CSV files
+
+These files contain data logged by USB modules from YoctoPuce.
+These files are included for use in the documentation and for testing the
+package itself. They can be also useful when learning about the USB modules
+YoctoPuce. They have been all truncated to a header row plus 199 data rows.
+
+```{r}
+system.file("extdata", package = "rYoctoPuceInOut", mustWork = TRUE) |>
+  list.files(pattern = "csv$")
+```
+
+Be aware that these CSV files use dots (.) as decimal marker and semicolon
+(;) as field separator, with no white space. Consequently, if using
+`read.csv()` it is necessary to pass `sep = ";"` in the call.
+
+## Example JSON files
+
+These files contain exported settings from USB modules from YoctoPuce.
+These files are included for use in the documentation and for
+testing the package itself. They can be also useful when learning about
+the USB modules. They are as exported for the modules.
+
+```{r}
+system.file("extdata", package = "rYoctoPuceInOut", mustWork = TRUE) |>
+  list.files(pattern = "json$")
+```
+## Example R data
+
+A `data.frame` created by importing file `yocto-spectral-LED.csv` together
+with file `SPECTRL1-2CF3B6.json` is included as `yocto_spectral.df`.
+
+```{r}
+head(yocto_spectral.df)
+```
+
+```{r}
+cat(comment(yocto_spectral.df))
+```
+
+```{r}
+cat(how_measured(yocto_spectral.df))
+```
+All the data objects included in the package can be listed.
+ 
+```{r}
+data(package='rYoctoPuceInOut') |>
+repr::repr_text() |> cat()
+```
+ 

@@ -18,6 +18,9 @@ reference:
     desc: Functions that simulate sensor response from sensor specifications and spectral irradiance.
     contents:
     - simul_response
+  - title: Example data
+    contents:
+    - yocto_spectral.df
 
 navbar:
   structure:

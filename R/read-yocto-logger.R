@@ -1,7 +1,8 @@
 #' Read data from YoctoPuce CSV files
 #'
 #' Functions able to directly read and validate data from .CSV files created by
-#' the data loggers built into YoctoPuce USB modules.
+#' the data loggers built into YoctoPuce USB modules, and metadata extracted
+#' from a JSON file with the USB module settings.
 #'
 #' @param settings.file character Path to a JSON file containing the module
 #'   settings used to acquire the data.
@@ -43,9 +44,15 @@
 #' have been changed.
 #'
 #' If the name of a JSON file as saved from the YoctoPuce module is passed as
-#' an argument to parameter \code{settings.file} its contents parse into an
-#' R list will be saved to attribute \code{yoctopuce.settings} in the returned
-#' data frame.
+#' an argument to parameter \code{settings.file} its contents parsed into an
+#' R list are saved to attribute \code{"yocto.module.settings"} in the returned
+#' data frame. The metadata also make it possible to set column names to the
+#' logical names set in the module. The logical name of the module and the
+#' units are also extracted if available, formatted and saved in the
+#' \code{"how.measured"} attribute.
+#'
+#' A comment attribute is always set with information about the imported file(s)
+#' and the import time and package.
 #'
 #' Function \code{read_yocto_spectral_csv()} is a wrapper on
 #' \code{read_yocto_logger()} that renames columns using the names used in
@@ -59,10 +66,14 @@
 #' @section Warning!: The units and basis of expression, and in several cases
 #' even the physical quantity measured cannot be decoded from the CSV files.
 #' The values in the returned data frame are those read from the file, and
-#' the read values have to be interpreted based on the settings and, possibly,
+#' the read values have to be interpreted based on the module settings which,
 #' scripts used during data acquisition by the USB module. These settings
-#' if available in a JSON file downloaded from the module can be stored in
-#' attribute \code{yoctopuce.settings} of the data frame returned.
+#' if available in a JSON file downloaded from the module, can be stored in
+#' attribute \code{"yocto.module.settings"} of the data frame returned.
+#'
+#' I have access to several different USB modules from YoctoPuce, but not to
+#' all of them. There are currently some modules that are not fully supported,
+#' and a few others that "should" work but have not been yet tested.
 #'
 #' @return A data frame with \code{POSIXct} time stamps in column \code{time}
 #'   and data in a variable number of columns containing values converted by
@@ -201,7 +212,7 @@
 #' # metadata from JSON file
 #' spectral.df <-
 #'   read_yocto_spectral_csv(yocto_spectral.file,
-#'                           yocto_spectral_json.file) |> head(n = 5)
+#'                           yocto_spectral_json.file)
 #' cat(how_measured(spectral.df))
 #' cat(comment(spectral.df))
 #'

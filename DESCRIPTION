@@ -17,7 +17,6 @@ Depends:
     R (>= 4.1.0),
     photobiology (>= 0.14.1)
 Encoding: UTF-8
-LazyLoad: true
 Imports:
     utils,
     jsonlite,
@@ -26,12 +25,16 @@ Imports:
     tidyr,
     lubridate
 Suggests:
+    repr,
     photobiologySun,
     photobiologyLamps,
     photobiologyLEDs,
     ggplot2,
     knitr,
     rmarkdown
+LazyLoad: yes
+LazyData: yes
+ByteCompile: true
 URL: https://docs.r4photobiology.info/rYoctoPuceInOut/,
     https://github.com/aphalo/rYoctoPuceInOut
 BugReports: https://github.com/aphalo/rYoctoPuceInOut/issues

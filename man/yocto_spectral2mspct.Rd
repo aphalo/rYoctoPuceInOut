@@ -4,18 +4,50 @@
 \alias{yocto_spectral2mspct}
 \title{Yocto-Spectral to spectra}
 \usage{
-yocto_spectral2mspct(df, channels = "all")
+yocto_spectral2mspct(df, channels = "all", ...)
 }
 \arguments{
 \item{df}{data.frame With only one of average, minimum or maximum sensor
-counts for the channels.}
+counts for each spectral channels.}
 
 \item{channels}{character vector of length one or longer. In addition to a
 vector of spectral sensor channel names as used in the AS7343
 documentation, the nicknames \code{"all"}, \code{"wide"}, \code{"narrow"}
 and \code{"xyz"} as vectors of length one are accepted.}
+
+\item{...}{
+  Arguments passed on to \code{\link[photobiology:subset2mspct]{photobiology::subset2mspct}}
+  \describe{
+    \item{\code{drop.idx}}{logical Flag indicating whether to drop or keep idx.var in
+the collection members.}
+    \item{\code{ncol}}{integer Number of 'virtual' columns in data.}
+    \item{\code{byrow}}{logical If \code{ncol > 1} how to read in the data.}
+  }}
 }
 \description{
 Convert a data frame with data imported with \code{read_yocto_spectral_csv()}
-into a colelction of \code{raw_spct} objects-
+into a collection of \code{raw_spct} objects.
+}
+\details{
+The data frame, possibly after subsetting data columns, is pivoted into
+long form, and subsequently split by time stamp.
+The readings at each time point are converted into \emph{short} spectra with at
+most 13 wavelength values, one from each channel.
+}
+\note{
+Currently, function \code{\link[photobiology]{subset2mspct}()} used
+in the conversion into a \code{raw_mspct} object can be slow in the case of
+10000's of spectra.
+}
+\examples{
+nrow(yocto_spectral.df)
+comment(yocto_spectral.df)
+yocto_spectral.mspct <- yocto_spectral2mspct(yocto_spectral.df)
+summary(yocto_spectral.mspct)
+yocto_spectral.mspct[[1]]
+
+}
+\seealso{
+\code{\link[photobiology]{subset2mspct}()},
+\code{\link[photobiology:source_spct]{raw_spct}()}.
 }
