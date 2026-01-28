@@ -349,12 +349,9 @@ read_yocto_logger_csv <- function(file,
            names(settings.list$api), value = TRUE)
 
     # keep channel names for which there are data columns
-    unique(gsub("\\.avg|\\.min|\\.max", "", data.cols))
     channel.names <-
       intersect(channel.names,
                 unique(gsub("\\.avg|\\.min|\\.max", "", data.cols)))
-
-    print(channel.names)
 
     logical.names <- character(length(channel.names))
     channel.units <- character(length(channel.names))
@@ -395,8 +392,8 @@ read_yocto_logger_csv <- function(file,
     } else {
       channel.units.txt <- "Units: not available."
     }
-    how_measured(data.df) <-
-      paste("USB module ",
+    how_measured.txt <-
+      paste("YoctoPuce USB module ",
             ifelse(settings.list$api$module$logicalName != "",
                    paste("named '",
                          settings.list$api$module$logicalName,
@@ -406,7 +403,10 @@ read_yocto_logger_csv <- function(file,
             settings.list$api$module$serialNumber, "' with firmware '",
             settings.list$api$module$firmwareRelease, "'.",
             "\n", channel.units.txt, sep = "")
+  } else {
+    how_measured.txt <- "YoctoPuce USB module type 'unknown'."
   }
+  photobiology::how_measured(data.df) <- how_measured.txt
 
   data.df
 

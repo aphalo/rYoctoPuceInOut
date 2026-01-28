@@ -1,4 +1,8 @@
 
+# rYoctoPuceInOut 0.0.2
+
+- Implement support of calibrations through `calc_waveband_irrads()`.
+
 # rYoctoPuceInOut 0.0.1-1
 
 Initial release. 
