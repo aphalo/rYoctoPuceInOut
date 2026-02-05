@@ -122,78 +122,6 @@
 #' cat(how_measured(meteo3.df))
 #' str(attr(meteo3.df, "yocto.module.settings"), max.level = 2)
 #'
-#' # Yocto-Millivolt-Rx module
-#'
-#' yocto_mv.file <-
-#'   system.file("extdata", "yocto-millivolt-Rx.csv",
-#'               package = "rYoctoPuceInOut", mustWork = TRUE)
-#'
-#' read_yocto_logger_csv(yocto_mv.file) |> head(n = 5)
-#'
-#' # Yocto-0-10V-Rx module
-#'
-#' yocto_v.file <-
-#'   system.file("extdata", "yocto-0-10V-Rx.csv",
-#'               package = "rYoctoPuceInOut", mustWork = TRUE)
-#'
-#' read_yocto_logger_csv(yocto_v.file) |> head(n = 5)
-#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "avg") |> head(n = 5)
-#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "min|max") |> head(n = 5)
-#' read_yocto_logger_csv(yocto_v.file, cols.pattern = "Sensor2") |> head(n = 5)
-#'
-#' # Yocto-Serial module
-#'
-#' yocto_serial.file <-
-#'   system.file("extdata", "yocto-serial.csv",
-#'               package = "rYoctoPuceInOut", mustWork = TRUE)
-#' yocto_serial_settings.file <-
-#'   system.file("extdata", "YSERIAL1-EAD24.json",
-#'               package = "rYoctoPuceInOut", mustWork = TRUE)
-#'
-#' read_yocto_logger_csv(yocto_serial.file) |> head(n = 5)
-#' read_yocto_logger_csv(yocto_serial.file, nacols.rm = FALSE) |> head(n = 2)
-#' read_yocto_logger_csv(yocto_serial.file, cols.pattern = "Sensor1$") |>
-#'   head(n = 5)
-#'
-#' # metadata from JSON file
-#' serial.tb <-
-#'   read_yocto_logger_csv(yocto_serial.file,
-#'                         yocto_serial_settings.file,
-#'                         cols.logical.names = TRUE)
-#' cat(comment(serial.tb))
-#' cat(how_measured(serial.tb))
-#' colnames(serial.tb)
-#'
-#' # Yocto-I2C module
-#'
-#' yocto_i2c.file <-
-#'   system.file("extdata", "yocto-i2c-tsl2591.csv",
-#'               package = "rYoctoPuceInOut", mustWork = TRUE)
-#'
-#' read_yocto_logger_csv(yocto_i2c.file) |> head(n = 5)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg") |>
-#'   head(n = 5)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "min|max") |>
-#'   head(n = 5)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor1[.]") |>
-#'   head(n = 5)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]") |>
-#'   head(n = 5)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "avg", nacols.rm = TRUE) |>
-#'   head(n = 5)
-#' read_yocto_logger_csv(yocto_i2c.file, cols.pattern = "Sensor[1-3][.]avg") |>
-#'   head(n = 5)
-#'
-#' # Yocto-CO2 module
-#'
-#' yocto_CO2.file <-
-#'   system.file("extdata", "yocto-CO2-V1.csv",
-#'               package = "rYoctoPuceInOut", mustWork = TRUE)
-#'
-#' read_yocto_logger_csv(yocto_CO2.file) |> head(n = 5)
-#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "avg") |> head(n = 5)
-#' read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "min|max") |> head(n = 5)
-#'
 #' # Yocto-Spectral module
 #'
 #' yocto_spectral.file <-
@@ -251,11 +179,11 @@ read_yocto_logger_csv <- function(file,
     warning("Found missing time stamps! Deleting ", sum(is.na(data.df[["UNIX.time"]])))
     data.df <- data.df[!is.na(data.df[["UNIX.time"]]), ]
   }
-  if (is.unsorted(data.df[["UNIX.time"]], na.rm = TRUE, strictly = TRUE)) {
-    warning("Found unsorted time stamps! Likely clock was reset midway.")
-  }
   if (length(unique(data.df[["UNIX.time"]])) < nrow(data.df)) {
     warning("Found duplicated time stamps! Likely clock was reset midway.")
+  }
+  if (is.unsorted(data.df[["UNIX.time"]], na.rm = TRUE, strictly = FALSE)) {
+    warning("Found unsorted time stamps! Likely clock was reset midway.")
   }
 
   # remove NA columns
