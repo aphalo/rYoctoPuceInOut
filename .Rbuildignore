@@ -8,3 +8,4 @@
 ^data-raw$
 ^pkgdown$
 ^vignettes/articles$
+^\.github$

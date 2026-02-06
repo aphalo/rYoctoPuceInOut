@@ -14,6 +14,7 @@ reference:
     desc: Functions that convert the imported data frames into objects of classes from package 'photobiology'.
     contents:
     - yocto_spectral2mspct
+    - calc_waveband_irrads
   - title: Data simulation
     desc: Functions that simulate sensor response from sensor specifications and spectral irradiance.
     contents:
@@ -42,8 +43,6 @@ navbar:
       menu:
       - text: 'User Guide'
         href: articles/user-guide.html
-      - text: 'Small data set AS7343 Simulations'
-        href: articles/plant-qts.html
       - text: 'Large data set AS7343 Simulations'
         href: articles/simul-calibration.html
     tutorials:

@@ -16,7 +16,12 @@ knitr::opts_chunk$set(
 # rYoctoPuceInOut
 
 <!-- badges: start -->
+[![R Universe version](https://aphalo.r-universe.dev/badges/rYoctoPuceInOut)](https://aphalo.r-universe.dev/rYoctoPuceInOut)
+[![R-CMD-check](https://github.com/aphalo/rYoctoPuceInOut/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/aphalo/rYoctoPuceInOut/actions/workflows/R-CMD-check.yaml)
+[![Documentation](https://img.shields.io/badge/documentation-rYoctoPuceInOut-informational.svg)](https://docs.r4photobiology.info/rYoctoPuceInOut/)
 <!-- badges: end -->
+
+## Purpose
 
 The goal of 'rYoctoPuceInOut' is to facilitate the import of data saved by
 the built-in logger of various USB modules made by 
@@ -37,12 +42,52 @@ R packages.
 
 ## Installation
 
-You can install the development version of 'rYoctoPuceInOut' with:
+Package 'rYoctoPuceInOut' is not yet published through CRAN. Currently, it is
+easiest to install it from R-Universe. It is also possible to directly install
+it from the sources at the GitHUb repository.
+
+In recent versions of R an option can be set to make the author's
+repository at R-Universe. Once the option is set installing this package works
+similarly as from CRAN.
+
+```{r, eval=FALSE}
+repos <- getOption("repos", default = list())
+repos[["r4photobiology"]] <- "https://aphalo.r-universe.dev"
+options(repos = repos)
+```
+
+```{r, eval=FALSE}
+install.packages(c('rOmniDriver', 'ooacquire'))
+```
+
+Without setting the option, it is also possible to pass the URL of the my
+R-Universe repository in the call to `install.packages()`
+together with the CRAN URL to ensure that dependencies are installed.
+
+```{r, eval=FALSE}
+install.packages(c('rOmniDriver', 'ooacquire'), 
+                 repos = c('https://aphalo.r-universe.dev', 
+                           'https://cloud.r-project.org'))
+```
+
+You can install the same version of 'rYoctoPuceInOut' with:
 
 ```{r, eval=FALSE}
 remotes::install_github("aphalo/rYoctoPuceInOut")
+```
+
+To check the currently installed version use:
+
+```{r}
 packageVersion("rYoctoPuceInOut")
 ```
+
+## Documentation and examples
+
+Documentation includes one vignettes in addition to help pages. The examples in
+the vignettes and help pages use example files downloaded from different
+YoctoPuce modules. These CSV (data) and JSON (settings) files can be found in
+folder `extdata`.
 
 ## Examples
 
@@ -76,3 +121,46 @@ head(read_yocto_spectral_csv(yocto_spectral.file,
                              cols.pattern = "avg"), 5)
 ```
 
+## Documentation
+
+HTML documentation for this package is available at
+(<https://docs.r4photobiology.info/rYoctoPuceInOut/>), including a *User
+Guide* and a description of the algorithms.
+
+## Folder Structure
+
+The folder structure of the Git repository is shown below. Folders `.github`, `data-raw` and `articles` are not included in the built package. Folder `data-raw` contains raw data and scripts mostly thought as useful for future use. Folder `tests` contains files implementing unit tests.
+
+```
+rYoctoPuceInOut
+├── .github 
+├── data
+├─- data-raw
+├─┬ inst
+│ └── extdata
+├── man 
+├── R
+├─┬ tests
+│ └── testthat
+└─┬ vignettes
+  └── articles
+```
+
+## Contributing
+
+Please report bugs and request new features at
+(<https://github.com/aphalo/rYoctoPuceInOut/issues>). Pull requests are
+welcome at (<https://github.com/aphalo/rYoctoPuceInOut>).
+
+## Citation
+
+If you use 'rYoctoPuceInOut' to produce scientific or commercial publications,
+acknowledge this by citing the package according to:
+
+```{r}
+citation("rYoctoPuceInOut")
+```
+
+## License
+
+© 2025-2026 Pedro J. Aphalo ([pedro.aphalo\@helsinki.fi](mailto:pedro.aphalo@helsinki.fi)). This software carries no warranty of any kind even if carefully designed and coded. The open source code is available for inspection.
