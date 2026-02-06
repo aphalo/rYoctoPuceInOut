@@ -197,24 +197,23 @@ read_yocto_logger_csv <- function(file,
     data.df <- data.df[ , keepcols, drop = FALSE]
   }
 
-  # select columns using grep() for regex pattern matching on names
-  if (!length(cols.pattern) || !is.na(cols.pattern)) {
-    if (length(cols.pattern)) {
-      if (is.na(cols.pattern)) {
-        return(data.df)
-      }
-      data.cols <- grep(cols.pattern, x = colnames(data.df), value = TRUE)
-    } else {
-      data.cols <- grep("time", x = colnames(data.df), value = TRUE, invert = TRUE)
+  # drop columns matching "time": "UNIX time", "Local time", "time"
+  data.cols <- grep("time", colnames(data.df), value = TRUE, invert = TRUE)
+  if (length(cols.pattern)) {
+    if (is.na(cols.pattern)) {
+      # return all columns as is
+      return(data.df)
     }
-    if (!length(data.cols)) {
-      warning("Returning only time values!! ",
-              "Selection pattern '", cols.pattern,
-              "' did not match any data column",
-              ifelse(nacols.rm, " with non-missing data. ", ". "))
-    }
-    data.df <- data.df[ , c("time", data.cols), drop = FALSE]
+    # select columns using grep() for regex pattern
+    data.cols <- grep(cols.pattern, x = data.cols, value = TRUE)
   }
+  if (!length(data.cols)) {
+    warning("Returning only time values!! ",
+            "Selection pattern '", cols.pattern,
+            "' did not match any data column",
+            ifelse(nacols.rm, " with non-missing data. ", ". "))
+  }
+  data.df <- data.df[ , c("time", data.cols), drop = FALSE]
 
   # add comment attr with file and import data
   if (length(settings.file)) {

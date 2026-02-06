@@ -85,6 +85,23 @@ test_that("columns from Yocto-Meteo CSV and JSON files are named correctly", {
   expect_true(grepl("METEOMK2-19A230", how_measured(meteo4.df)))
 })
 
+test_that("geocode is set", {
+  my.geocode <- data.frame(lat = -35, lon = 100, address = "somewhere")
+  expect_no_error(
+    meteo5.df <- read_yocto_logger_csv(yocto_meteo.file, geocode = my.geocode)
+    )
+  # a tibble is a valid returned value
+  expect_equal(as.data.frame(where_measured(meteo5.df)), my.geocode)
+})
+
+test_that("geocode is set", {
+  expect_no_error(
+    meteo6.df <- read_yocto_logger_csv(yocto_meteo.file,
+                                       label = "addition to comment")
+  )
+  expect_true(grepl("addition to comment", comment(meteo6.df)))
+})
+
 ## test with Yocto-Bridge data
 
 yocto_bridge.file <-
@@ -427,4 +444,17 @@ test_that("repeated time stamp warns", {
 
   expect_warning(spectralspct4.df <-
                    read_yocto_logger_csv(yocto_warn_repeated.file))
+})
+
+test_that("bad settings file errors", {
+  yocto_mv.file <-
+    system.file("extdata", "yocto-millivolt-Rx.csv",
+                package = "rYoctoPuceInOut", mustWork = TRUE)
+  yocto_parse_error_json.file <-
+    system.file("extdata", "RXMVOLT1-3EEE1-corrupted.json",
+                package = "rYoctoPuceInOut", mustWork = TRUE)
+
+  expect_error(read_yocto_logger_csv(yocto_mv.file,
+                                     yocto_parse_error.file))
+
 })

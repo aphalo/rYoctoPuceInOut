@@ -1,0 +1,5 @@
+{ "BAD":{
+"module":{"productName":"Yocto-milliVolt-Rx","serialNumber":"RXMVOLT1-3EEE1","logicalName":"LED-current","productId":64,"productRelease":1,"firmwareRelease":"69970","persistentSettings":0,"luminosity":50,"beacon":0,"upTime":13113,"usbCurrent":57,"rebootCountdown":0,"userVar":0},
+"genericSensor1":{"logicalName":"","advertisedValue":"2363.8","unit":"mA","currentValue":-1966014464,"lowestValue":94002085,"highestValue":154915700,"currentRawValue":-1966014464,"logFrequency":"1/s","reportFrequency":"OFF","advMode":0,"calibrationParam":"0,","resolution":6553,"sensorState":1,"signalValue":-16774070,"signalUnit":"mV","signalRange":"-250...250","valueRange":"-2500...2500","signalBias":-3932,"signalSampling":3,"enabled":1},
+"dataLogger":{"logicalName":"","advertisedValue":"ON","currentRunIndex":4390911,"timeUTC":1769352642,"recording":1,"autoStart":1,"beaconDriven":0,"usage":2,"clearHistory":0}}, "extras":[],
+"files":[]}
