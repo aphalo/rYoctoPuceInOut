@@ -66,16 +66,16 @@
 #' default names by shorter or more informative ones.
 #'
 #' @section Warning!: The units and basis of expression, and in several cases
-#' even the physical quantity measured cannot be decoded from the CSV files.
-#' The values in the returned data frame are those read from the file, and
-#' the read values have to be interpreted based on the module settings which,
-#' scripts used during data acquisition by the USB module. These settings
-#' if available in a JSON file downloaded from the module, can be stored in
-#' attribute \code{"yocto.module.settings"} of the data frame returned.
+#'   even the physical quantity measured cannot be discovered from the CSV
+#'   files. The values in the returned data frame are those read from the file,
+#'   and the read values have to be interpreted based on the module settings.
+#'   These settings if available in a JSON file downloaded from the module, can
+#'   be stored in attribute \code{"yocto.module.settings"} of the data frame
+#'   returned.
 #'
-#' I have access to several different USB modules from YoctoPuce, but not to
-#' all of them. There are currently some modules that are not fully supported,
-#' and a few others that "should" work but have not been yet tested.
+#'   I have access to several different USB modules from YoctoPuce, but not to
+#'   all of them. There are currently some modules that are not fully supported,
+#'   and a few others that "should" work but have not been yet tested.
 #'
 #' @return A data frame with \code{POSIXct} time stamps in column \code{time}
 #'   and data in a variable number of columns containing values converted by

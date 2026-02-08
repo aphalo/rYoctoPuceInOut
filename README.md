@@ -15,7 +15,7 @@ version](https://aphalo.r-universe.dev/badges/rYoctoPuceInOut)](https://aphalo.r
 
 Package ‘rYoctoPuceInOut’ is at a very early stage of development.
 Function interfaces and object names are still subject to changes likely
-to break code written for the current version ‘rYoctoPuceInOut’ (==
+to break code written for the current version of ‘rYoctoPuceInOut’ (==
 0.0.1.9001).
 
 ## Purpose

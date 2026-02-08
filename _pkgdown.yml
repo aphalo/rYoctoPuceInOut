@@ -15,10 +15,10 @@ reference:
     contents:
     - calc_calibrated_qtys
     - yocto_spectral2mspct
-  - title: Data simulation
-    desc: Functions that simulate sensor response from sensor specifications and spectral irradiance.
+  - title: Module metadata
+    desc: Objects containing descriptions of YoctoPuce USB modules, based on typical values in specifications.
     contents:
-    - simul_light_response
+    - y_spectral.descriptor
   - title: Example data
     contents:
     - yocto_spectral.df
