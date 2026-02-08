@@ -19,6 +19,8 @@
 #'   to set attribute \code{"where.measured"}.
 #' @param label	character Additional text to be appended to the default
 #'   value used to set attribute \code{"comment"}.
+#' @param module.descriptor list A matadata descriptor of the YocotoPuce USB
+#'   module to be added as an attribute to the returned object.
 #' @inheritParams utils::read.table
 #' @inheritParams lubridate::ymd_hms
 #' @inheritDotParams utils::read.table colClasses nrows skip check.names comment.char
@@ -26,7 +28,7 @@
 #' @details The dataloggers implemented in different USB modules from
 #' YoctoPuce return .CSV files with a consistent format, that varies only
 #' in the number of data columns and their names. Function
-#' \code{read_yocto_logger()} reads any of these files preserving column
+#' \code{read_yocto_datalog()} reads any of these files preserving column
 #' names. The UTC times are converted into \code{POSIXct} values and added
 #' under column \code{time}. A subset of columns can be requested by
 #' passing a regular expression to be used in a call to \code{grep()} on the
@@ -54,8 +56,8 @@
 #' A comment attribute is always set with information about the imported file(s)
 #' and the import time and package.
 #'
-#' Function \code{read_yocto_spectral_csv()} is a wrapper on
-#' \code{read_yocto_logger()} that renames columns using the names used in
+#' Function \code{read_yocto_spctlog()} is a wrapper on
+#' \code{read_yocto_datalog()} that renames columns using the names used in
 #' the data sheet for the AS7343 sensor.
 #'
 #' In modules with multiple channels, the user can enable and disable logging
@@ -86,6 +88,7 @@
 #' @export
 #'
 #' @examples
+#' library(photobiology)
 #' # Yocto-Meteo module
 #'
 #' yocto_meteo.file <-
@@ -95,26 +98,26 @@
 #'   system.file("extdata", "METEOMK2-19A230.json",
 #'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' meteo1.df <- read_yocto_logger_csv(yocto_meteo.file)
+#' meteo1.df <- read_yocto_datalog(yocto_meteo.file)
 #' head(meteo1.df, n = 5)
 #' cat(comment(meteo1.df))
 #' cat(how_measured(meteo1.df))
 #'
-#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "avg") |>
+#' read_yocto_datalog(yocto_meteo.file, cols.pattern = "avg") |>
 #'   head(n = 5)
-#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "min|max") |>
+#' read_yocto_datalog(yocto_meteo.file, cols.pattern = "min|max") |>
 #'   head(n = 5)
-#' read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "temperature") |>
+#' read_yocto_datalog(yocto_meteo.file, cols.pattern = "temperature") |>
 #'   head(n = 5)
-#' read_yocto_logger_csv(yocto_meteo.file, nrows = 4L)
+#' read_yocto_datalog(yocto_meteo.file, nrows = 4L)
 #'
 #' # metadata from JSON file
-#' meteo2.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file)
+#' meteo2.df <- read_yocto_datalog(yocto_meteo.file, yocto_meteo_json.file)
 #' head(meteo2.df, n = 5)
 #' cat(comment(meteo2.df))
 #' cat(how_measured(meteo2.df))
 #'
-#' meteo3.df <- read_yocto_logger_csv(yocto_meteo.file,
+#' meteo3.df <- read_yocto_datalog(yocto_meteo.file,
 #'                                    yocto_meteo_json.file,
 #'                                    cols.logical.names = TRUE)
 #' head(meteo3.df, n = 5)
@@ -131,33 +134,33 @@
 #'   system.file("extdata", "SPECTRL1-2CF3B6.json",
 #'               package = "rYoctoPuceInOut", mustWork = TRUE)
 #'
-#' read_yocto_spectral_csv(yocto_spectral.file) |> head(n = 5)
-#' read_yocto_spectral_csv(yocto_spectral.file, cols.pattern = "Channel1\\.") |>
+#' read_yocto_spctlog(yocto_spectral.file) |> head(n = 5)
+#' read_yocto_spctlog(yocto_spectral.file, cols.pattern = "Channel1\\.") |>
 #'   head(n = 5)
-#' read_yocto_spectral_csv(yocto_spectral.file, cols.rename = FALSE) |>
+#' read_yocto_spctlog(yocto_spectral.file, cols.rename = FALSE) |>
 #'   head(n = 5)
 #'
 #' # metadata from JSON file
 #' spectral.df <-
-#'   read_yocto_spectral_csv(yocto_spectral.file,
+#'   read_yocto_spctlog(yocto_spectral.file,
 #'                           yocto_spectral_json.file)
 #' cat(how_measured(spectral.df))
 #' cat(comment(spectral.df))
 #'
-#' AS7343_metadata()
-#'
-read_yocto_logger_csv <- function(file,
-                                  settings.file = NULL,
-                                  geocode = NULL,
-                                  label = NULL,
-                                  cols.pattern = NULL,
-                                  cols.logical.names = FALSE,
-                                  nacols.rm = TRUE,
-                                  dec = ".", sep = ";", tz = "UTC",
-                                  ...) {
+read_yocto_datalog <- function(file,
+                               settings.file = NULL,
+                               geocode = NULL,
+                               label = NULL,
+                               cols.pattern = NULL,
+                               cols.logical.names = FALSE,
+                               nacols.rm = TRUE,
+                               dec = ".", sep = ";", tz = "UTC",
+                               module.descriptor = NULL,
+                               ...) {
 
   data.df <- utils::read.csv(file,
-                             quote = "", na.strings = "", strip.white = FALSE,
+                             quote = "", na.strings = "",
+                             strip.white = FALSE,
                              blank.lines.skip = TRUE,
                              dec = dec, sep = sep,
                              ...)
@@ -241,7 +244,7 @@ read_yocto_logger_csv <- function(file,
 
   # add where.measured attribute
   if (SunCalcMeeus::is_valid_geocode(geocode)) {
-    where_measured(data.df) <- geocode
+    photobiology::where_measured(data.df) <- geocode
   }
 
   # add yocotopuce.settings and how.measured attr with module metadata
@@ -308,6 +311,9 @@ read_yocto_logger_csv <- function(file,
     }
 
     attr(data.df, "yocto.module.settings") <- settings.list
+    if (!is.null(module.descriptor) && is.list(module.descriptor)) {
+      attr(data.df, "yocto.module.descriptor") <- module.descriptor
+    }
     if (length(channel.units) && any(channel.units != "")) {
       channel.units.txt <-
         paste("Units: ",
@@ -339,7 +345,7 @@ read_yocto_logger_csv <- function(file,
 
 }
 
-#' @rdname read_yocto_logger_csv
+#' @rdname read_yocto_datalog
 #'
 #' @param cols.rename logical Flag, if \code{TRUE} use channel names from
 #'   sensor IC specification as column names, and if \code{FALSE} keep the
@@ -347,21 +353,25 @@ read_yocto_logger_csv <- function(file,
 #'
 #' @export
 #'
-read_yocto_spectral_csv <- function(file,
-                                    settings.file = NULL,
-                                    cols.pattern = "avg",
-                                    cols.rename = TRUE,
-                                    dec = ".", sep = ";", tz = "UTC", ...) {
+read_yocto_spctlog <- function(file,
+                                settings.file = NULL,
+                                cols.pattern = "avg",
+                                cols.rename = TRUE,
+                                dec = ".", sep = ";", tz = "UTC",
+                                ...) {
 
-  data.df <- read_yocto_logger_csv(file,
-                                   settings.file = settings.file,
-                                   cols.pattern = cols.pattern,
-                                   cols.logical.names = FALSE,
-                                   nacols.rm = FALSE,
-                                   dec = dec, sep = sep, tz = tz, ...)
+  data.df <- read_yocto_datalog(file,
+                               settings.file = settings.file,
+                               cols.pattern = cols.pattern,
+                               cols.logical.names = FALSE,
+                               nacols.rm = FALSE,
+                               dec = dec, sep = sep, tz = tz,
+                               module.descriptor =
+                                 rYoctoPuceInOut::y_spectral.descriptor,
+                               ...)
 
   # get sensor metadata
-  metadata <- AS7343_metadata()
+  metadata <- rYoctoPuceInOut::y_spectral.descriptor$peak.wl
 
   # find columns with data
   datacol.idxs <- which(!grepl("time", colnames(data.df)))
@@ -376,28 +386,5 @@ read_yocto_spectral_csv <- function(file,
     colnames(data.df)[datacol.idxs] <- datacol.names
   }
 
-  attr(data.df, "yocto.properties") <-
-    list(data.channels = names(metadata)[unique(channel.idxs)],
-         data.w.lengths = unname(metadata)[unique(channel.idxs)],
-         sensor.type = "AS743",
-         module.type = "Yocto-Spectral",
-         sensor.channels = names(metadata),
-         sensor.w.lengths = unname(metadata),
-         s.irrad.unit = "arbitrary units")
-
   data.df
-}
-
-#' @rdname read_yocto_logger_csv
-#'
-#' @export
-#'
-AS7343_metadata <- function() {
-  chn.names.AS7343 <-
-    c("F1", "F2", "FZ", "F3", "F4", "FY", "F5", "FXL", "F6", "F7", "F8", "NIR", "VIS")
-
-  chn.wls.AS7343 <-
-    c(405, 425, 450, 475, 515, 555, 550, 600, 640, 690, 745, 855, 620)
-  names(chn.wls.AS7343) <- chn.names.AS7343
-  chn.wls.AS7343
 }

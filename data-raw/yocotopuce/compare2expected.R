@@ -6,7 +6,7 @@ library(ggspectra)
 yocto_spectral.file <-
    system.file("extdata", "yocto-spectral-LED.csv",
                package = "AS7343", mustWork = TRUE)
-observed.tb <- read_yocto_spectral_csv(yocto_spectral.file)
+observed.tb <- read_yocto_spctlog(yocto_spectral.file)
 observed.mspct <- yocto_spectral2mspct(observed.tb)
 
 autoplot(observed.mspct[[161]])

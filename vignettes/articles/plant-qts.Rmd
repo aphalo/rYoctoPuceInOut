@@ -1,7 +1,11 @@
 ---
 title: "Plant-Related Quantities"
-subtitle: "Simulated AS7343 calibrations for sunlight"
+subtitle: "Package 'rYoctoPuceInOut' `r packageVersion('rYoctoPuceInOut')` "
 author: "Pedro J. Aphalo"
+date: "`r packageDate('rYoctoPuceInOut')`"
+output: 
+  html_document:
+    toc: yes
 ---
 
 ```{r, include = FALSE}
@@ -95,7 +99,10 @@ irradiances.tb
 The response of the AS7343 sensor can be simulated with a function that convolutes the light spectrum with the respnse spectra for the different channels and intergrates the sensor response accross wavelengths. In `channels.tb` the responses are stored with one row per channel, that is converted into a data frame with one column per channel (`ch.tb`).
 
 ```{r}
-channels.tb <- simul_AS7343(sun.spct)
+channels.tb <- 
+  simul_sensor_response(sun.spct,
+                       sensors.mspct[["ams_AS7343"]],
+                       norm = "undo")
 ch.tb <- as.data.frame(t(channels.tb[ , -1]))
 colnames(ch.tb) <- channels.tb[[1]]
 ch.tb
@@ -170,14 +177,17 @@ irradiances.tb <-
 nrow(irradiances.tb)
 ```
 
-As function `simul_AS7343()` is not yet vectorised, a `for` loop is needed to "walk" through the spectra in the collection.
+As function `simul_sensor_response()` is not yet vectorised, a `for` loop is needed to "walk" through the spectra in the collection.
 
 ```{r}
 channels.ls <-list()
 spct.names <- names(test.mspct)
+AS7343.mspct <- subset2mspct(sensors.mspct[["ams_AS7343"]])
 for (name in spct.names) {
 #  print(name)
-  temp.tb <- simul_AS7343(test.mspct[[name]][ , 1:2])
+  temp.tb <- simul_sensor_response(test.mspct[[name]][ , 1:2],
+                                  AS7343.mspct,
+                                  norm = "undo")
   channels.ls[[name]] <- temp.tb[[2]]
 }
 channels.tb <- as.data.frame(t(as.data.frame(channels.ls)))

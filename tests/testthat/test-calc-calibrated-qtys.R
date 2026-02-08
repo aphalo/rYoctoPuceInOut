@@ -1,4 +1,4 @@
-test_that("irradiance estimates are correct", {
+test_that("calibrations are applied correctly", {
   # example calibration list based on parallel measurements of sunlight
   s01.cal <-
     list(module.type = "YoctoSpectral",
@@ -21,9 +21,9 @@ test_that("irradiance estimates are correct", {
                 package = "rYoctoPuceInOut", mustWork = TRUE)
 
   # read data and apply calibration
-  yocto_data.df <- head(read_yocto_spectral_csv(yocto_spectral.file), 5)
+  yocto_data.df <- head(read_yocto_spctlog(yocto_spectral.file), 5)
 
-  irrads.df <- calc_waveband_irrads(yocto_data.df, s01.cal)
+  irrads.df <- calc_calibrated_qtys(yocto_data.df, s01.cal)
   expect_s3_class(irrads.df, "data.frame")
   expect_equal(dim(irrads.df), c(5, 7))
   expect_named(irrads.df,

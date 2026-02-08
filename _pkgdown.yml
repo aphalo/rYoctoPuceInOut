@@ -9,16 +9,16 @@ reference:
   - title: Data import
     desc: Functions that read CSV files from data loggers in YoctoPuce USB modules and return data frames.
     contents:
-    - read_yocto_logger_csv
+    - read_yocto_datalog
   - title: Data conversion
     desc: Functions that convert the imported data frames into objects of classes from package 'photobiology'.
     contents:
+    - calc_calibrated_qtys
     - yocto_spectral2mspct
-    - calc_waveband_irrads
   - title: Data simulation
     desc: Functions that simulate sensor response from sensor specifications and spectral irradiance.
     contents:
-    - simul_response
+    - simul_light_response
   - title: Example data
     contents:
     - yocto_spectral.df

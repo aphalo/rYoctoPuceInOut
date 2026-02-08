@@ -1,8 +1,11 @@
 ---
 title: "Test with Ander's hourly and Titta's greenhouse spectra"
+subtitle: "Package 'rYoctoPuceInOut' `r packageVersion('rYoctoPuceInOut')` "
 author: "Pedro J. Aphalo"
-date: "`r Sys.Date()`"
-output: html_document
+date: "`r packageDate('rYoctoPuceInOut')`"
+output: 
+  html_document:
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Set up
 
-```{r}
+This article is not part of the package, it is a on-line-only supplementary article. It depends on R packages not included as imports or suggests of 'rYoctoPuceInOut'. To run the examples below it can be necessary to install one or more of the packages attached in this code chunk.
+
+```{r, message=FALSE}
 library(duckplyr)
 library(photobiology)
 library(photobiologyWavebands)
@@ -91,7 +96,10 @@ channels.ls <-list()
 spct.names <- names(test.mspct)
 for (name in spct.names) {
 #  print(name)
-  temp.tb <-simul_AS7343(test.mspct[[name]][ , 1:2])
+  temp.tb <- 
+    simul_sensor_response(test.mspct[[name]][ , 1:2],
+                         sensors.mspct[["ams_AS7343"]],
+                         norm = "undo")
   channels.ls[[name]] <- temp.tb[[2]]
 }
 channels.tb <- as.data.frame(t(as.data.frame(channels.ls)))

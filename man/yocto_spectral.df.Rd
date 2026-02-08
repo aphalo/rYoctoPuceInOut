@@ -13,7 +13,7 @@ yocto_spectral.df
 \description{
 A dataset containing data logged with a Yocto-Spectral USB
 module from YoctoPuce and imported with function
-\code{\link[rYoctoPuceInOut:read_yocto_logger_csv]{read_yocto_spectral_csv}()}.
+\code{\link[rYoctoPuceInOut:read_yocto_datalog]{read_yocto_spctlog}()}.
 }
 \examples{
 head(yocto_spectral.df)
@@ -21,6 +21,6 @@ head(yocto_spectral.df)
 }
 \seealso{
 \code{\link{yocto_spectral2mspct}()},
-\code{{read_yocto_logger_csv}()}.
+\code{{read_yocto_datalog}()}.
 }
 \keyword{datasets}

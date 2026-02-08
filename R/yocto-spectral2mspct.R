@@ -1,6 +1,6 @@
 #' Yocto-Spectral to spectra
 #'
-#' Convert a data frame with data imported with \code{read_yocto_spectral_csv()}
+#' Convert a data frame with data imported with \code{read_yocto_spctlog()}
 #' into a collection of \code{raw_spct} objects.
 #'
 #' @param df data.frame With only one of average, minimum or maximum sensor
@@ -41,7 +41,7 @@ yocto_spectral2mspct <- function(df, channels = "all", ...) {
   # how_measured.txt <- how_measured(df)
 
   if (is.null(channels) || channels == "all") {
-    channels <- names(AS7343_metadata())
+    channels <- names(rYoctoPuceInOut::y_spectral.descriptor$peak.wl)
   } else if (tolower(channels) == "xyz") {
     channels <- c("FZ", "FY", "FXL")
   } else if (channels == "wide") {
@@ -50,11 +50,14 @@ yocto_spectral2mspct <- function(df, channels = "all", ...) {
     channels <- paste("F", 1:8, sep = "")
   }
 
-  channels <- intersect(channels, names(AS7343_metadata()))
+  channels <-
+    intersect(channels,
+              names(rYoctoPuceInOut::y_spectral.descriptor$peak.wl))
   stopifnot("Invalid or missing 'channel' names!" = length(channels) >= 1L)
 
   # sort channels by w.length before pivoting
-  channels <- channels[order(AS7343_metadata()[channels])]
+  channels <-
+    channels[order(rYoctoPuceInOut::y_spectral.descriptor$peak.wl[channels])]
   # make sure colnames are bare channel names
   colnames(df) <- gsub("\\.avg$", "", colnames(df))
   # subset columns before pivoting
@@ -69,7 +72,9 @@ yocto_spectral2mspct <- function(df, channels = "all", ...) {
                            cols = grep("time", colnames(df), invert = TRUE),
                            names_to = "channel",
                            values_to = "counts")
-  z[["w.length"]] <- AS7343_metadata()[z[["channel"]]]
+  z[["w.length"]] <-
+    rYoctoPuceInOut::y_spectral.descriptor$peak.wl[z[["channel"]]]
+  z <- z[order(z[["w.length"]]), ]
 
   # this is currently rather slow with 1000s of spectra!
   photobiology::subset2mspct(z,
@@ -82,14 +87,14 @@ yocto_spectral2mspct <- function(df, channels = "all", ...) {
 #'
 #' @description A dataset containing data logged with a Yocto-Spectral USB
 #'   module from YoctoPuce and imported with function
-#'   \code{\link[rYoctoPuceInOut:read_yocto_logger_csv]{read_yocto_spectral_csv}()}.
+#'   \code{\link[rYoctoPuceInOut:read_yocto_datalog]{read_yocto_spctlog}()}.
 #'
 #' @docType data
 #' @keywords datasets
 #' @format A \code{data.frame} with 199 rows and 14 variables.
 #'
 #' @seealso \code{\link{yocto_spectral2mspct}()},
-#'   \code{{read_yocto_logger_csv}()}.
+#'   \code{{read_yocto_datalog}()}.
 #'
 #' @examples
 #' head(yocto_spectral.df)

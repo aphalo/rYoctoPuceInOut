@@ -9,41 +9,42 @@ names(chn.wls.AS7343) <- chn.names.AS7343
 
 wl.order <- order(chn.wls.AS7343)
 names.ordered <- chn.names.AS7343[wl.order]
-center.wls <- chn.wls.AS7343[wl.order]
+center.wls <- chn.wls.AS7343
 
 sensor.spct <- normalize(sensors.mspct$ams_AS7343, norm = "undo")
 
 peaks.df <- peaks(sensor.spct, span = NULL)
 wls.peaks <- peaks.df$w.length
 names(wls.peaks) <- peaks.df$channel
-wls.peaks <- wls.peaks[names.ordered] |> round(1)
+wls.peaks <- wls.peaks[chn.names.AS7343] |> round(1)
 
 wls.HM.df <- wls_at_target(sensor.spct)
 wls.HM <- wls.HM.df$w.length
 names(wls.HM) <- wls.HM.df$channel
 
-wls.HM.left <- wls.HM[c(TRUE, FALSE)][names.ordered] |> round(1)
-wls.HM.right <- wls.HM[c(FALSE, TRUE)][names.ordered] |> round(1)
+wls.HM.left <- wls.HM[c(TRUE, FALSE)][chn.names.AS7343] |> round(1)
+wls.HM.right <- wls.HM[c(FALSE, TRUE)][chn.names.AS7343] |> round(1)
 HMFW <- wls.HM.right - wls.HM.left
 
 wls.10.df <- wls_at_target(sensor.spct, target = "0.1max")
 wls.10 <- wls.10.df$w.length
 names(wls.10) <- wls.10.df$channel
 
-wls.10.left <-wls.10[c(TRUE, FALSE)][names.ordered] |> round(1)
-wls.10.right <- wls.10[c(FALSE, TRUE)][names.ordered] |> round(1)
+wls.10.left <- wls.10[c(TRUE, FALSE)][chn.names.AS7343] |> round(1)
+wls.10.right <- wls.10[c(FALSE, TRUE)][chn.names.AS7343] |> round(1)
 TMFW <- wls.10.right - wls.10.left
 
 wls.05.df <- wls_at_target(sensor.spct, target = "0.05max")
 wls.05 <- wls.05.df$w.length
 names(wls.05) <- wls.05.df$channel
 
-wls.05.left <-wls.05[c(TRUE, FALSE)][names.ordered] |> round(1)
-wls.05.right <- wls.05[c(FALSE, TRUE)][names.ordered] |> round(1)
+wls.05.left <- wls.05[c(TRUE, FALSE)][chn.names.AS7343] |> round(1)
+wls.05.right <- wls.05[c(FALSE, TRUE)][chn.names.AS7343] |> round(1)
 FMFW <- wls.05.right - wls.05.left
 
-AS7343_metadata.ls <-
-  list(channels = names.ordered,
+y_spectral.descriptor <-
+  list(sensor.descriptor = attr(sensors.mspct$ams_AS7343, "sensor.properties"),
+       channels = chn.names.AS7343,
        center.wl = center.wls,
        peak.wl = wls.peaks,
        wl.HM.left = wls.HM.left,
@@ -53,3 +54,5 @@ AS7343_metadata.ls <-
        wl.10.right = wls.10.right,
        TMFW = wls.10.right - wls.10.left
   )
+
+save(y_spectral.descriptor, file = "./data/modules-metadata.rda")

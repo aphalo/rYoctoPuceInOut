@@ -1,8 +1,8 @@
 Package: rYoctoPuceInOut
 Type: Package
 Title: Logged Data File Import for YoctoPuce USB Modules 
-Version: 0.0.1.9000
-Date: 2026-02-07
+Version: 0.0.1.9001
+Date: 2026-02-08
 Authors@R: c(
     person("Pedro J.", "Aphalo", 
       email = "pedro.aphalo@helsinki.fi", 
@@ -14,21 +14,21 @@ Description: Read CSV files from the data loggers built into YoctoPuce USB
     sensor modules and JSON files with module settings and other metadata.
 License: GPL (>= 2)
 Depends: 
-    R (>= 4.1.0),
-    photobiology (>= 0.14.1)
+    R (>= 4.1.0)
 Encoding: UTF-8
 Imports:
     utils,
     jsonlite,
+    photobiology (> 0.14.1),
     SunCalcMeeus,
-    photobiologySensors (>= 0.5.2),
     tidyr,
     lubridate
 Suggests:
     repr,
-    photobiologySun,
     photobiologyLamps,
     photobiologyLEDs,
+    photobiologySensors (>= 0.5.2),
+    photobiologySun,
     ggplot2,
     knitr,
     rmarkdown,

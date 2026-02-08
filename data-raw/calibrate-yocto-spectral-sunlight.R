@@ -46,9 +46,9 @@ AS7343_simulated.df$q.response.rel <-
   AS7343_simulated.df$q.response / AS7343_simulated.df$q.response[[13]]
 
 yocto_s01_raw.tb <-
-  read_yocto_spectral_csv("data-raw/yocotopuce/viikki-field-s01-2025-08-14.csv")
+  read_yocto_spctlog("data-raw/yocotopuce/viikki-field-s01-2025-08-14.csv")
 yocto_s02_raw.tb <-
-  read_yocto_spectral_csv("data-raw/yocotopuce/viikki-field-s02-2025-08-14.csv")
+  read_yocto_spctlog("data-raw/yocotopuce/viikki-field-s02-2025-08-14.csv")
 
 yocto_s01_measured <- t(yocto_s01_raw.tb[37, -1])
 yocto_s02_measured <- t(yocto_s02_raw.tb[37, -1])

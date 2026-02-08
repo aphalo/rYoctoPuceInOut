@@ -7,11 +7,11 @@ library(rYoctoPuceInOut)
 # times are out of sync!!
 
 data1.df <-
-  read_yocto_spectral_csv(file = "data-raw/yocotopuce/spectrl-01-2025-12-02.csv",
+  read_yocto_spctlog(file = "data-raw/yocotopuce/spectrl-01-2025-12-02.csv",
                           tz = "Europe/Helsinki")
 
 data2.df <-
-  read_yocto_spectral_csv(file = "data-raw/yocotopuce/spectrl-02-2025-12-02.csv",
+  read_yocto_spctlog(file = "data-raw/yocotopuce/spectrl-02-2025-12-02.csv",
                           tz = "Europe/Helsinki")
 
 ggplot(data1.df, aes(time)) +

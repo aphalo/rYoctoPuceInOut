@@ -1,4 +1,5 @@
 ## thorough test with Yocto-Meteo data
+library(photobiology) # metadata query functions
 
 yocto_meteo.file <-
   system.file("extdata", "yocto-meteo-snm.csv",
@@ -8,7 +9,7 @@ yocto_meteo_json.file <-
               package = "rYoctoPuceInOut", mustWork = TRUE)
 
 test_that("Yocto-Meteo CSV file is read correctly", {
-  expect_no_error(meteo1.df <- read_yocto_logger_csv(yocto_meteo.file))
+  expect_no_error(meteo1.df <- read_yocto_datalog(yocto_meteo.file))
   expect_false(anyNA(meteo1.df))
   expect_s3_class(meteo1.df, "data.frame")
   expect_equal(dim(meteo1.df), c(199, 10))
@@ -22,7 +23,7 @@ test_that("Yocto-Meteo CSV file is read correctly", {
 
 test_that("columns from Yocto-Meteo CSV file are read correctly", {
   expect_no_error(
-    meteo2.df <- read_yocto_logger_csv(yocto_meteo.file, cols.pattern = "\\.avg$"))
+    meteo2.df <- read_yocto_datalog(yocto_meteo.file, cols.pattern = "\\.avg$"))
   expect_false(anyNA(meteo2.df))
   expect_s3_class(meteo2.df, "data.frame")
   expect_equal(dim(meteo2.df), c(199, 4))
@@ -33,7 +34,7 @@ test_that("columns from Yocto-Meteo CSV file are read correctly", {
 
   # no columns from CSV file removed
   expect_no_error(meteo2NA.df <-
-                    read_yocto_logger_csv(yocto_meteo.file, cols.pattern = NA))
+                    read_yocto_datalog(yocto_meteo.file, cols.pattern = NA))
   expect_equal(dim(meteo2NA.df), c(199, 12))
   # check names of columns
   expect_named(meteo2NA.df,
@@ -48,7 +49,7 @@ test_that("columns from Yocto-Meteo CSV file are read correctly", {
 
 test_that("Yocto-Meteo CSV and JSON files are read correctly", {
   expect_no_error(
-    meteo3.df <- read_yocto_logger_csv(yocto_meteo.file, yocto_meteo_json.file))
+    meteo3.df <- read_yocto_datalog(yocto_meteo.file, yocto_meteo_json.file))
   expect_silent(settings <- attr(meteo3.df, "yocto.module.settings", exact = TRUE))
   expect_false(anyNA(meteo3.df))
   expect_s3_class(meteo3.df, "data.frame")
@@ -70,7 +71,7 @@ test_that("Yocto-Meteo CSV and JSON files are read correctly", {
 
 test_that("columns from Yocto-Meteo CSV and JSON files are named correctly", {
   expect_no_error(meteo4.df <-
-                    read_yocto_logger_csv(yocto_meteo.file,
+                    read_yocto_datalog(yocto_meteo.file,
                                           yocto_meteo_json.file,
                                           cols.logical.names = TRUE))
   expect_false(anyNA(meteo4.df))
@@ -88,7 +89,7 @@ test_that("columns from Yocto-Meteo CSV and JSON files are named correctly", {
 test_that("geocode is set", {
   my.geocode <- data.frame(lat = -35, lon = 100, address = "somewhere")
   expect_no_error(
-    meteo5.df <- read_yocto_logger_csv(yocto_meteo.file, geocode = my.geocode)
+    meteo5.df <- read_yocto_datalog(yocto_meteo.file, geocode = my.geocode)
     )
   # a tibble is a valid returned value
   expect_equal(as.data.frame(where_measured(meteo5.df)), my.geocode)
@@ -96,7 +97,7 @@ test_that("geocode is set", {
 
 test_that("geocode is set", {
   expect_no_error(
-    meteo6.df <- read_yocto_logger_csv(yocto_meteo.file,
+    meteo6.df <- read_yocto_datalog(yocto_meteo.file,
                                        label = "addition to comment")
   )
   expect_true(grepl("addition to comment", comment(meteo6.df)))
@@ -112,7 +113,7 @@ yocto_bridge_json.file <-
               package = "rYoctoPuceInOut", mustWork = TRUE)
 
 test_that("Yocto-bridge CSV file is read correctly", {
-  expect_no_error(bridge1.df <- read_yocto_logger_csv(yocto_bridge.file))
+  expect_no_error(bridge1.df <- read_yocto_datalog(yocto_bridge.file))
   expect_false(anyNA(bridge1.df))
   expect_s3_class(bridge1.df, "data.frame")
   expect_equal(dim(bridge1.df), c(53, 4))
@@ -124,10 +125,10 @@ test_that("Yocto-bridge CSV file is read correctly", {
 })
 
 test_that("columns from Yocto-bridge CSV file are read correctly", {
-  expect_warning(read_yocto_logger_csv(yocto_bridge.file, cols.pattern = "bad$"))
+  expect_warning(read_yocto_datalog(yocto_bridge.file, cols.pattern = "bad$"))
 
   expect_no_error(bridge2.df <-
-                    read_yocto_logger_csv(yocto_bridge.file, cols.pattern = "\\.avg$"))
+                    read_yocto_datalog(yocto_bridge.file, cols.pattern = "\\.avg$"))
   expect_false(anyNA(bridge2.df))
   expect_s3_class(bridge2.df, "data.frame")
   expect_equal(dim(bridge2.df), c(53, 2))
@@ -140,7 +141,7 @@ test_that("columns from Yocto-bridge CSV file are read correctly", {
 
 test_that("columns from Yocto-Bridge CSV and JSON files are named correctly", {
   expect_no_error(bridge4.df <-
-                    read_yocto_logger_csv(yocto_bridge.file,
+                    read_yocto_datalog(yocto_bridge.file,
                                           yocto_bridge_json.file,
                                           cols.pattern = "\\.avg$",
                                           cols.logical.names = TRUE))
@@ -162,7 +163,7 @@ yocto_CO2_json.file <-
               package = "rYoctoPuceInOut", mustWork = TRUE)
 
 test_that("Yocto-CO2 CSV file is read correctly", {
-  expect_no_error(co21.df <- read_yocto_logger_csv(yocto_CO2.file))
+  expect_no_error(co21.df <- read_yocto_datalog(yocto_CO2.file))
   expect_false(anyNA(co21.df))
   expect_s3_class(co21.df, "data.frame")
   expect_equal(dim(co21.df), c(199, 4))
@@ -175,10 +176,10 @@ test_that("Yocto-CO2 CSV file is read correctly", {
 })
 
 test_that("columns from Yocto-CO2 CSV file are read correctly", {
-  expect_warning(read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "bad$"))
+  expect_warning(read_yocto_datalog(yocto_CO2.file, cols.pattern = "bad$"))
 
   expect_no_error(co22.df <-
-                    read_yocto_logger_csv(yocto_CO2.file, cols.pattern = "\\.avg$"))
+                    read_yocto_datalog(yocto_CO2.file, cols.pattern = "\\.avg$"))
   expect_false(anyNA(co22.df))
   expect_s3_class(co22.df, "data.frame")
   expect_equal(dim(co22.df), c(199, 2))
@@ -191,7 +192,7 @@ test_that("columns from Yocto-CO2 CSV file are read correctly", {
 
 test_that("columns from Yocto-CO2 CSV and JSON files are named correctly", {
   expect_no_error(co24.df <-
-                    read_yocto_logger_csv(yocto_CO2.file,
+                    read_yocto_datalog(yocto_CO2.file,
                                           yocto_CO2_json.file,
                                           cols.pattern = "\\.avg$",
                                           cols.logical.names = TRUE))
@@ -214,7 +215,7 @@ yocto_i2c_settings.file <-
 
 test_that("columns from Yocto-I2C CSV and JSON files are named correctly", {
   expect_no_error(i2c4.df <-
-                    read_yocto_logger_csv(yocto_i2c.file,
+                    read_yocto_datalog(yocto_i2c.file,
                                           yocto_i2c_settings.file,
                                           cols.pattern = "\\.avg$",
                                           cols.logical.names = TRUE))
@@ -242,7 +243,7 @@ yocto_serial_settings.file <-
 
 test_that("columns from Yocto-Serial CSV and JSON files are named correctly", {
   expect_no_error(serial4.df <-
-                    read_yocto_logger_csv(yocto_serial.file,
+                    read_yocto_datalog(yocto_serial.file,
                                           yocto_serial_settings.file,
                                           cols.logical.names = TRUE))
   expect_false(anyNA(serial4.df))
@@ -265,7 +266,7 @@ yocto_v010_json.file <-
 
 test_that("columns from Yocto-Serial CSV and JSON files are named correctly", {
   expect_no_error(V010Rx4.df <-
-                    read_yocto_logger_csv(yocto_v010.file,
+                    read_yocto_datalog(yocto_v010.file,
                                           yocto_v010_json.file,
                                           cols.pattern = "\\.avg$",
                                           cols.logical.names = TRUE))
@@ -289,7 +290,7 @@ yocto_mv_json.file <-
 
 test_that("columns from Yocto-Serial CSV and JSON files are named correctly", {
   expect_no_error(mvRx4.df <-
-                    read_yocto_logger_csv(yocto_mv.file,
+                    read_yocto_datalog(yocto_mv.file,
                                           yocto_mv_json.file,
                                           cols.logical.names = TRUE))
   expect_false(anyNA(mvRx4.df))
@@ -311,7 +312,7 @@ yocto_spectral_json.file <-
               package = "rYoctoPuceInOut", mustWork = TRUE)
 
 test_that("Yocto-Spectral CSV file is read correctly", {
-  expect_no_error(spectral1.df <- read_yocto_logger_csv(yocto_spectral.file))
+  expect_no_error(spectral1.df <- read_yocto_datalog(yocto_spectral.file))
   expect_false(anyNA(spectral1.df))
   expect_s3_class(spectral1.df, "data.frame")
   expect_equal(dim(spectral1.df), c(199, 40))
@@ -325,10 +326,10 @@ test_that("Yocto-Spectral CSV file is read correctly", {
 })
 
 test_that("columns from Yocto-Spectral CSV file are read correctly", {
-  expect_warning(read_yocto_logger_csv(yocto_spectral.file, cols.pattern = "bad$"))
+  expect_warning(read_yocto_datalog(yocto_spectral.file, cols.pattern = "bad$"))
 
   expect_no_error(spectral2.df <-
-                    read_yocto_logger_csv(yocto_spectral.file, cols.pattern = "\\.avg$"))
+                    read_yocto_datalog(yocto_spectral.file, cols.pattern = "\\.avg$"))
   expect_false(anyNA(spectral2.df))
   expect_s3_class(spectral2.df, "data.frame")
   expect_equal(dim(spectral2.df), c(199, 14))
@@ -340,7 +341,7 @@ test_that("columns from Yocto-Spectral CSV file are read correctly", {
 
 test_that("columns from Yocto-Spectral CSV and JSON files are named correctly", {
   expect_no_error(spectral4.df <-
-                    read_yocto_logger_csv(yocto_spectral.file,
+                    read_yocto_datalog(yocto_spectral.file,
                                           yocto_spectral_json.file,
                                           cols.pattern = "\\.avg$",
                                           cols.logical.names = TRUE))
@@ -354,10 +355,10 @@ test_that("columns from Yocto-Spectral CSV and JSON files are named correctly", 
   expect_true(grepl("SPECTRL1-2CF3B6", how_measured(spectral4.df)))
 })
 
-## read_yocto_spectral_csv()
+## read_yocto_spctlog()
 
-test_that("read_yocto_spectral_csv() reads correctly CSV file", {
-  expect_no_error(spectralspct1.df <- read_yocto_spectral_csv(yocto_spectral.file))
+test_that("read_yocto_spctlog() reads correctly CSV file", {
+  expect_no_error(spectralspct1.df <- read_yocto_spctlog(yocto_spectral.file))
   expect_false(anyNA(spectralspct1.df))
   expect_s3_class(spectralspct1.df, "data.frame")
   expect_equal(dim(spectralspct1.df), c(199, 14))
@@ -370,9 +371,9 @@ test_that("read_yocto_spectral_csv() reads correctly CSV file", {
                     how_measured(spectralspct1.df)))
 })
 
-test_that("read_yocto_spectral_csv() reads correctly CSV file", {
+test_that("read_yocto_spctlog() reads correctly CSV file", {
   expect_no_error(
-    spectralspct2.df <- read_yocto_spectral_csv(yocto_spectral.file,
+    spectralspct2.df <- read_yocto_spctlog(yocto_spectral.file,
                                                 cols.pattern = "Channel1\\."))
   expect_false(anyNA(spectralspct2.df))
   expect_s3_class(spectralspct2.df, "data.frame")
@@ -384,9 +385,9 @@ test_that("read_yocto_spectral_csv() reads correctly CSV file", {
                     how_measured(spectralspct2.df)))
 })
 
-test_that("read_yocto_spectral_csv() reads correctly CSV file", {
+test_that("read_yocto_spctlog() reads correctly CSV file", {
   expect_no_error(
-    spectralspct2.df <- read_yocto_spectral_csv(yocto_spectral.file,
+    spectralspct2.df <- read_yocto_spctlog(yocto_spectral.file,
                                                 cols.pattern = "Channel1\\.",
                                                 cols.rename = FALSE))
   expect_false(anyNA(spectralspct2.df))
@@ -400,9 +401,9 @@ test_that("read_yocto_spectral_csv() reads correctly CSV file", {
                     how_measured(spectralspct2.df)))
 })
 
-test_that("read_yocto_spectral_csv() reads correctly CSV and JSON files", {
+test_that("read_yocto_spctlog() reads correctly CSV and JSON files", {
   expect_no_error(spectralspct4.df <-
-                    read_yocto_spectral_csv(yocto_spectral.file,
+                    read_yocto_spctlog(yocto_spectral.file,
                                             yocto_spectral_json.file))
   expect_false(anyNA(spectralspct4.df))
   expect_s3_class(spectralspct4.df, "data.frame")
@@ -425,7 +426,7 @@ test_that("missing time stamp warns", {
                 package = "rYoctoPuceInOut", mustWork = TRUE)
 
   expect_warning(spectralspct4.df <-
-                    read_yocto_logger_csv(yocto_warn_missing.file))
+                    read_yocto_datalog(yocto_warn_missing.file))
 })
 
 test_that("unsorted time stamp warns", {
@@ -434,7 +435,7 @@ test_that("unsorted time stamp warns", {
                 package = "rYoctoPuceInOut", mustWork = TRUE)
 
   expect_warning(spectralspct4.df <-
-                   read_yocto_logger_csv(yocto_warn_unsorted.file))
+                   read_yocto_datalog(yocto_warn_unsorted.file))
 })
 
 test_that("repeated time stamp warns", {
@@ -443,7 +444,7 @@ test_that("repeated time stamp warns", {
                 package = "rYoctoPuceInOut", mustWork = TRUE)
 
   expect_warning(spectralspct4.df <-
-                   read_yocto_logger_csv(yocto_warn_repeated.file))
+                   read_yocto_datalog(yocto_warn_repeated.file))
 })
 
 test_that("bad settings file errors", {
@@ -454,7 +455,7 @@ test_that("bad settings file errors", {
     system.file("extdata", "RXMVOLT1-3EEE1-corrupted.json",
                 package = "rYoctoPuceInOut", mustWork = TRUE)
 
-  expect_error(read_yocto_logger_csv(yocto_mv.file,
+  expect_error(read_yocto_datalog(yocto_mv.file,
                                      yocto_parse_error.file))
 
 })

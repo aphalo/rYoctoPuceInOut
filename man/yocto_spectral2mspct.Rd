@@ -25,7 +25,7 @@ the collection members.}
   }}
 }
 \description{
-Convert a data frame with data imported with \code{read_yocto_spectral_csv()}
+Convert a data frame with data imported with \code{read_yocto_spctlog()}
 into a collection of \code{raw_spct} objects.
 }
 \details{

@@ -11,21 +11,26 @@ version](https://aphalo.r-universe.dev/badges/rYoctoPuceInOut)](https://aphalo.r
 [![Documentation](https://img.shields.io/badge/documentation-rYoctoPuceInOut-informational.svg)](https://docs.r4photobiology.info/rYoctoPuceInOut/)
 <!-- badges: end -->
 
+## Warning
+
+Package ‘rYoctoPuceInOut’ is at a very early stage of development.
+Function interfaces and object names are still subject to changes likely
+to break code written for the current version ‘rYoctoPuceInOut’ (==
+0.0.1.9001).
+
 ## Purpose
 
 The goal of ‘rYoctoPuceInOut’ is to facilitate the import of data saved
 by the built-in logger of various USB modules made by
 [YoctoPuce](https://www.yoctopuce.com/). File import functions as well
-as auxiliary functions that easy the use of the logged data are
-provided. These additional functions currently target the AS7343 digital
-spectral sensor from AMS-Osram used in the *YoctoSpectral* module.
-
-The simulations of channel responses of the AS7343 makes possible
-*in-silico* simulations of the retrieval specific quantities of interest
-such as PAR, ePAR, UVA:PAR, R:FR and B:G ratios.
+as auxiliary functions that easy the use of the logged data by
+applicaton of calibrations are provided, or conversion into objects
+following the expectations of the **R for Photobiology** suite of R
+packages.
 
 The package includes CSV files with data logged by a selection of
-different USB USB modules from *YoctoPuce*.
+different USB USB modules from *YoctoPuce*. It also includes JSON files
+with settings for the same modules.
 
 Package ‘rYoctoPuceInOut’ is an extension of the R for photobiology
 suite of R packages.
@@ -70,7 +75,7 @@ To check the currently installed version use:
 
 ``` r
 packageVersion("rYoctoPuceInOut")
-#> [1] '0.0.1.9000'
+#> [1] '0.0.1.9001'
 ```
 
 ## Documentation and examples
@@ -85,37 +90,13 @@ files can be found in folder `extdata`.
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(AS7343)
-#> Loading required package: photobiology
-#> Loading required package: SunCalcMeeus
-#> Documentation at https://docs.r4photobiology.info/
-simul_AS7343(sun.spct, 
-             unit.out = "photon",
-             scale.factor = 1e-6)
-#> # A tibble: 13 × 2
-#>    spct.idx `R[/q]_range.280.800`
-#>    <fct>                    <dbl>
-#>  1 F1                       1.06 
-#>  2 F2                       1.27 
-#>  3 F3                       3.14 
-#>  4 F4                       3.83 
-#>  5 F5                       3.66 
-#>  6 F6                       4.46 
-#>  7 F7                       4.61 
-#>  8 F8                       3.25 
-#>  9 FXL                      7.40 
-#> 10 FY                       9.63 
-#> 11 FZ                       4.32 
-#> 12 NIR                      0.155
-#> 13 VIS                     13.7
-```
+library(rYoctoPuceInOut)
 
-``` r
 yocto_meteo.file <-
   system.file("extdata", "yocto-meteo-snm.csv",
               package = "rYoctoPuceInOut", mustWork = TRUE)
 
-head(read_yocto_logger_csv(yocto_meteo.file), 5)
+head(read_yocto_datalog(yocto_meteo.file), 5)
 #> Period: 2025-08-07 19:32:05 to 2025-08-07 22:50:00
 #> Found gaps, time steps range from 55s to 60s (~1 minutes)
 #>                  time humidity.min humidity.avg humidity.max pressure.min
@@ -130,7 +111,7 @@ head(read_yocto_logger_csv(yocto_meteo.file), 5)
 #> 3     1012.434     1012.477          23.495          23.501          23.506
 #> 4     1012.467     1012.525          23.495          23.502          23.506
 #> 5     1012.468     1012.525          23.506          23.510          23.517
-head(read_yocto_logger_csv(yocto_meteo.file, 
+head(read_yocto_datalog(yocto_meteo.file, 
                            cols.pattern = "avg"), 5)
 #> Period: 2025-08-07 19:32:05 to 2025-08-07 22:50:00
 #> Found gaps, time steps range from 55s to 60s (~1 minutes)
@@ -140,7 +121,7 @@ head(read_yocto_logger_csv(yocto_meteo.file,
 #> 3 2025-08-07 16:34:05       53.269     1012.434          23.501
 #> 4 2025-08-07 16:35:05       53.482     1012.467          23.502
 #> 5 2025-08-07 16:36:05       53.794     1012.468          23.510
-head(read_yocto_logger_csv(yocto_meteo.file,
+head(read_yocto_datalog(yocto_meteo.file,
                            cols.pattern = "temperature"), 5)
 #> Period: 2025-08-07 19:32:05 to 2025-08-07 22:50:00
 #> Found gaps, time steps range from 55s to 60s (~1 minutes)
@@ -157,7 +138,7 @@ yocto_spectral.file <-
    system.file("extdata", "yocto-spectral-LED.csv",
              package = "rYoctoPuceInOut", mustWork = TRUE)
 
-head(read_yocto_spectral_csv(yocto_spectral.file,
+head(read_yocto_spctlog(yocto_spectral.file,
                              cols.pattern = "avg"), 5)
 #> Period: 2025-12-03 21:54:00 to 2025-12-03 22:52:14
 #> Found gaps, time steps range from 10s to 60s (~1 minutes)
@@ -198,7 +179,7 @@ unit tests.
     rYoctoPuceInOut
     ├── .github 
     ├── data
-    ├─- data-raw
+    ├── data-raw
     ├─┬ inst
     │ └── extdata
     ├── man 
@@ -224,7 +205,7 @@ citation("rYoctoPuceInOut")
 #> To cite package 'rYoctoPuceInOut' in publications use:
 #> 
 #>   Aphalo P (2026). _rYoctoPuceInOut: Logged Data File Import for
-#>   YoctoPuce USB Modules_. R package version 0.0.1.9000,
+#>   YoctoPuce USB Modules_. R package version 0.0.1.9001,
 #>   <https://docs.r4photobiology.info/rYoctoPuceInOut/>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -233,7 +214,7 @@ citation("rYoctoPuceInOut")
 #>     title = {rYoctoPuceInOut: Logged Data File Import for YoctoPuce USB Modules},
 #>     author = {Pedro J. Aphalo},
 #>     year = {2026},
-#>     note = {R package version 0.0.1.9000},
+#>     note = {R package version 0.0.1.9001},
 #>     url = {https://docs.r4photobiology.info/rYoctoPuceInOut/},
 #>   }
 ```
